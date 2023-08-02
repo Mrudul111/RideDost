@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "448365911896",
+    "firebase_url": "https://token-system-b5d30-default-rtdb.firebaseio.com",
+    "project_id": "token-system-b5d30",
+    "storage_bucket": "token-system-b5d30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448365911896:android:bd38df6d92f99c6e1d4f2d",
+        "android_client_info": {
+          "package_name": "com.example.token"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "448365911896-92dfeq0e8csuqr0dsei9mvu64sjtck6l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9XZk8Ke3FZamn_NhMJn_bKsIgcwtrtbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "448365911896-92dfeq0e8csuqr0dsei9mvu64sjtck6l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "448365911896-bsqd8lp625ri93v0j6qj1om06h9343uc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.token"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

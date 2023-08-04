@@ -33,12 +33,12 @@ class _homePageState extends State<homePage> {
                     SizedBox(height: 50),
                     Center(
                       child: Container(
-                        width: 375,
+                        width: 150,
                         height: 50.49,
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage('assets/images/logo.png'),
-                            fit: BoxFit.contain,
+                            fit: BoxFit.fitWidth,
                           ),
                         ),
                       ),
@@ -46,12 +46,15 @@ class _homePageState extends State<homePage> {
                     SizedBox(height: 30),
                     Center(
                       child: Container(
-                        width: 249.09,
-                        height: 422.21,
+
+                        width: 263.09,
+                        height: 392.70,
                         decoration: BoxDecoration(
+
                           image: DecorationImage(
                             image: AssetImage('assets/images/logoScreen2.png'),
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fitHeight,
+
                           ),
                         ),
                       ),
@@ -89,7 +92,7 @@ class _homePageState extends State<homePage> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20.0,
+                      height: 60.0,
                     ),
                     SizedBox(
                       width: double.infinity,
@@ -101,34 +104,20 @@ class _homePageState extends State<homePage> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/login');
+                        },
                         child:  Text(
-                          "Sign In",
+                          "Sign up",
                           style: TextStyle(
                             fontFamily: "Mazzart",
-                            fontSize: 24.0,
+                            fontSize: 20.0,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 20,),
-                    Center(
-                      child: GestureDetector(
-                        child: Text(
-                          'Log in',
-                          style: TextStyle(
-                            color: Color(0xFF3574F2),
-                            fontSize: 24,
-                            fontFamily: "Mazzart"
-                          ),
-                        ),
-                        onTap: (){
-                          Navigator.pushNamed(context, '/login');
-                        },
-                      ),
-                    )
                   ],
                 ),
               ),

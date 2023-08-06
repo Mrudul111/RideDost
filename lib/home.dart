@@ -53,7 +53,7 @@ class _homePageState extends State<homePage> {
 
                           image: DecorationImage(
                             image: AssetImage('assets/images/logoScreen2.png'),
-                            fit: BoxFit.fitHeight,
+                            fit: BoxFit.cover,
 
                           ),
                         ),

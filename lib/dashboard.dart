@@ -1,12 +1,23 @@
 // dashboard_screen.dart
 
+
+
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'main.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({Key? key}) : super(key: key);
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int currentPage = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,340 +32,350 @@ class DashboardScreen extends StatelessWidget {
       drawer: Drawer(
 
         width: MediaQuery.of(context).size.width * 0.8,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 50.0),
-            child: Column(
+        child: Builder(
 
-              children: [
-                SizedBox(height: 50,),
-                Image(image: AssetImage('assets/images/rd 1.png'),fit: BoxFit.fitWidth,),
-                SizedBox(height: 50,),
-                Container(
-                  height: 50.0,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0))),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/dashboard');
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+          builder: (BuildContext context) {
+            String currentRoute = ModalRoute.of(context)?.settings.name ?? '';
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 50.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(height: 50,),
+                      Image(image: AssetImage('assets/images/rd 1.png'),fit: BoxFit.fitWidth,),
+                      SizedBox(height: 50,),
+                      Container(
+                        height: 50.0,
+                        decoration:  BoxDecoration(
+                            color: currentRoute == '/' ? Colors.blue : Colors.transparent,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                bottomLeft: Radius.circular(5.0))),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
 
-                      children: [
-                        Icon(
-                          Icons.dashboard,
-                          color:  Color(0xFF737784),
-                          size: 30.0,
+                            children: [
+                              Icon(
+                                Icons.dashboard,
+                                color:  Color(0xFF737784),
+                                size: 30.0,
+                              ),
+                              const SizedBox(
+                                width: 15.0,
+                              ),
+                              Text(
+                                'Dashboard',
+                                style: TextStyle(
+                                    color:  Color(0xFF737784),
+                                    fontSize: 18.0,
+                                    fontFamily: 'Mazzart',
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
                         ),
-                        const SizedBox(
-                          width: 15.0,
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        height: 50.0,
+                        decoration:  BoxDecoration(
+                            color: currentRoute == '/manageteam' ? Colors.blue : Colors.transparent,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                bottomLeft: Radius.circular(5.0))),
+                        child: TextButton(
+                          onPressed: () {
+
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+
+                            children: [
+                              Icon(
+                                Icons.people_alt_outlined,
+                                color: Color(0xFF737784),
+                                size: 30.0,
+                              ),
+                              const SizedBox(
+                                width: 15.0,
+                              ),
+                              Text(
+                                'Manage Team',
+                                style: TextStyle(
+                                    color: Color(0xFF737784),
+                                    fontSize: 18.0,
+                                    fontFamily: 'Mazzart',
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
                         ),
-                        Text(
-                          'Dashboard',
-                          style: TextStyle(
-                              color:  Color(0xFF737784),
-                              fontSize: 18.0,
-                              fontFamily: 'Mazzart',
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        height: 50.0,
+                        decoration: const BoxDecoration(
+
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                bottomLeft: Radius.circular(5.0))),
+                        child: TextButton(
+                          onPressed: () {
+
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+
+                            children: [
+                              Icon(
+                                Icons.group_add_outlined,
+                                color: Color(0xFF737784),
+                                size: 30.0,
+                              ),
+                              const SizedBox(
+                                width: 15.0,
+                              ),
+                              Text(
+                                'Add Vendor',
+                                style: TextStyle(
+                                    color: Color(0xFF737784),
+                                    fontSize: 18.0,
+                                    fontFamily: 'Mazzart',
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        height: 50.0,
+                        decoration: const BoxDecoration(
+
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                bottomLeft: Radius.circular(5.0))),
+                        child: TextButton(
+                          onPressed: () {
+
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+
+                            children: [
+                              Icon(
+                                Icons.groups,
+                                color: Color(0xFF737784),
+                                size: 30.0,
+                              ),
+                              const SizedBox(
+                                width: 15.0,
+                              ),
+                              Text(
+                                'Vendor List',
+                                style: TextStyle(
+                                    color: Color(0xFF737784),
+                                    fontSize: 18.0,
+                                    fontFamily: 'Mazzart',
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        height: 50.0,
+                        decoration: const BoxDecoration(
+
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                bottomLeft: Radius.circular(5.0))),
+                        child: TextButton(
+                          onPressed: () {
+
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+
+                            children: [
+                              Icon(
+                                Icons.shopping_cart_outlined,
+                                color: Color(0xFF737784),
+                                size: 30.0,
+                              ),
+                              const SizedBox(
+                                width: 15.0,
+                              ),
+                              Text(
+                                'Product List',
+                                style: TextStyle(
+                                    color: Color(0xFF737784),
+                                    fontSize: 18.0,
+                                    fontFamily: 'Mazzart',
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        height: 50.0,
+                        decoration: const BoxDecoration(
+
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                bottomLeft: Radius.circular(5.0))),
+                        child: TextButton(
+                          onPressed: () {
+
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+
+                            children: [
+                              Icon(
+                                Icons.send_rounded,
+                                color: Color(0xFF737784),
+                                size: 30.0,
+                              ),
+                              const SizedBox(
+                                width: 15.0,
+                              ),
+                              Text(
+                                'Send Request',
+                                style: TextStyle(
+                                    color: Color(0xFF737784),
+                                    fontSize: 18.0,
+                                    fontFamily: 'Mazzart',
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        height: 50.0,
+                        decoration: const BoxDecoration(
+
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                bottomLeft: Radius.circular(5.0))),
+                        child: TextButton(
+                          onPressed: () {
+
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+
+                            children: [
+                              Icon(
+                                Icons.thumb_up_off_alt_outlined,
+                                color: Color(0xFF737784),
+                                size: 30.0,
+                              ),
+                              const SizedBox(
+                                width: 15.0,
+                              ),
+                              Text(
+                                'Approve Request',
+                                style: TextStyle(
+                                    color: Color(0xFF737784),
+                                    fontSize: 18.0,
+                                    fontFamily: 'Mazzart',
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        height: 50.0,
+                        decoration: const BoxDecoration(
+
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                bottomLeft: Radius.circular(5.0))),
+                        child: TextButton(
+                          onPressed: () {
+
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+
+                            children: [
+                              Icon(
+                                Icons.handshake,
+                                color: Color(0xFF737784),
+                                size: 30.0,
+                              ),
+                              const SizedBox(
+                                width: 15.0,
+                              ),
+                              Text(
+                                'Payment Settle',
+                                style: TextStyle(
+                                    color: Color(0xFF737784),
+                                    fontSize: 18.0,
+                                    fontFamily: 'Mazzart',
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        height: 50.0,
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                bottomLeft: Radius.circular(5.0))),
+                        child: TextButton(
+                          onPressed:  () async {
+                            await FirebaseAuth.instance.signOut();
+                            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+
+                            children: [
+                              Icon(
+                                Icons.logout_outlined,
+                                color: Color(0xFF737784),
+                                size: 30.0,
+                              ),
+                              const SizedBox(
+                                width: 15.0,
+                              ),
+                              Text(
+                                'Logout',
+                                style: TextStyle(
+                                    color: Color(0xFF737784),
+                                    fontSize: 18.0,
+                                    fontFamily: 'Mazzart',
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 20,),
-                Container(
-                  height: 50.0,
-                  decoration: const BoxDecoration(
-
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0))),
-                  child: TextButton(
-                    onPressed: () {
-
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Icon(
-                          Icons.people_alt_outlined,
-                          color: Color(0xFF737784),
-                          size: 30.0,
-                        ),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        Text(
-                          'Manage Team',
-                          style: TextStyle(
-                              color: Color(0xFF737784),
-                              fontSize: 18.0,
-                              fontFamily: 'Mazzart',
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20,),
-                Container(
-                  height: 50.0,
-                  decoration: const BoxDecoration(
-
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0))),
-                  child: TextButton(
-                    onPressed: () {
-
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Icon(
-                          Icons.group_add_outlined,
-                          color: Color(0xFF737784),
-                          size: 30.0,
-                        ),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        Text(
-                          'Add Vendor',
-                          style: TextStyle(
-                              color: Color(0xFF737784),
-                              fontSize: 18.0,
-                              fontFamily: 'Mazzart',
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20,),
-                Container(
-                  height: 50.0,
-                  decoration: const BoxDecoration(
-
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0))),
-                  child: TextButton(
-                    onPressed: () {
-
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Icon(
-                          Icons.groups,
-                          color: Color(0xFF737784),
-                          size: 30.0,
-                        ),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        Text(
-                          'Vendor List',
-                          style: TextStyle(
-                              color: Color(0xFF737784),
-                              fontSize: 18.0,
-                              fontFamily: 'Mazzart',
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20,),
-                Container(
-                  height: 50.0,
-                  decoration: const BoxDecoration(
-
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0))),
-                  child: TextButton(
-                    onPressed: () {
-
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Icon(
-                          Icons.shopping_cart_outlined,
-                          color: Color(0xFF737784),
-                          size: 30.0,
-                        ),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        Text(
-                          'Product List',
-                          style: TextStyle(
-                              color: Color(0xFF737784),
-                              fontSize: 18.0,
-                              fontFamily: 'Mazzart',
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20,),
-                Container(
-                  height: 50.0,
-                  decoration: const BoxDecoration(
-
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0))),
-                  child: TextButton(
-                    onPressed: () {
-
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Icon(
-                          Icons.send_rounded,
-                          color: Color(0xFF737784),
-                          size: 30.0,
-                        ),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        Text(
-                          'Send Request',
-                          style: TextStyle(
-                              color: Color(0xFF737784),
-                              fontSize: 18.0,
-                              fontFamily: 'Mazzart',
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20,),
-                Container(
-                  height: 50.0,
-                  decoration: const BoxDecoration(
-
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0))),
-                  child: TextButton(
-                    onPressed: () {
-
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Icon(
-                          Icons.thumb_up_off_alt_outlined,
-                          color: Color(0xFF737784),
-                          size: 30.0,
-                        ),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        Text(
-                          'Approve Request',
-                          style: TextStyle(
-                              color: Color(0xFF737784),
-                              fontSize: 18.0,
-                              fontFamily: 'Mazzart',
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20,),
-                Container(
-                  height: 50.0,
-                  decoration: const BoxDecoration(
-
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0))),
-                  child: TextButton(
-                    onPressed: () {
-
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Icon(
-                          Icons.handshake,
-                          color: Color(0xFF737784),
-                          size: 30.0,
-                        ),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        Text(
-                          'Payment Settle',
-                          style: TextStyle(
-                              color: Color(0xFF737784),
-                              fontSize: 18.0,
-                              fontFamily: 'Mazzart',
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20,),
-                Container(
-                  height: 50.0,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0))),
-                  child: TextButton(
-                    onPressed:  () async {
-                      await FirebaseAuth.instance.signOut();
-                      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Icon(
-                          Icons.logout_outlined,
-                          color: Color(0xFF737784),
-                          size: 30.0,
-                        ),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        Text(
-                          'Logout',
-                          style: TextStyle(
-                              color: Color(0xFF737784),
-                              fontSize: 18.0,
-                              fontFamily: 'Mazzart',
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
       body: SafeArea(
@@ -372,24 +393,213 @@ class DashboardScreen extends StatelessWidget {
                   Text(
                     "Welcome back!",
                     style: TextStyle(
-                      color: Color(0xFF737784),
-                      fontSize: 18
+                        color: Color(0xFF737784),
+                        fontSize: 18
                     ),
                   ),
                   Text(
                     "Mrudul Killedar",
                     style: TextStyle(
-                      color: Color(0xFF1D3A70),
-                      fontSize: 28
+                        color: Color(0xFF1D3A70),
+                        fontSize: 28
                     ),
                   ),
                   SizedBox(height: 20,),
+                  Container(
+                    height: 365,
+                    width: 327,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(height: 20,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Vendor List",
+                        style: TextStyle(
+                          fontFamily: 'DM Sans',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.pushNamed(context, '/vendor');
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              "View all",
+                              style: TextStyle(
+                                color: Color(0XFF3574F2),
+                                fontFamily: 'DM Sans',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                            ),
+                            Icon(
+                              (Icons.arrow_right_alt),
+                              color: Color(0XFF3574F2),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 10,),
                   SizedBox(
-                    width: 323,
-                    height: 76  ,
+                      width: 662,
+                      height: 76  ,
+                      child: PageView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 4,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: Color(0XFFFFFFFF),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 35,
+                                        backgroundImage: const NetworkImage("https://upload.wikimedia.org/wikipedia/en/3/34/Jimmy_McGill_BCS_S3.png"),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                            'Linda Marsh • LIN-120RD',
+                                            style: TextStyle(
+                                              color: Color(0xff1b2559),
+                                              fontFamily: 'DM Sans',
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.phone_outlined,
+                                                size: 12,
+                                                color: Color(0xffa3aed0),
+                                              ),
+                                              SizedBox(width: 5),
+                                              Text(
+                                                '7489685683',
+                                                style: TextStyle(
+                                                  fontFamily: 'DM Sans',
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Color(0xffa3aed0),
+                                                ),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Container(
+                                                width: 76,
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.mail_outline_rounded,
+                                                      size: 12,
+                                                      color: Color(0xffa3aed0),
+                                                    ),
+                                                    SizedBox(width: 5),
+                                                    Expanded(
+                                                      child: Text(
+                                                        'mrudulkilledar111@gmail.com',
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                          fontFamily: 'DM Sans',
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color(0xffa3aed0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(width: 10,),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        onPageChanged: (index) {
+                          // Update the current page index when the page changes
+                          setState(() {
+                            currentPage = index;
+                          });
+                        },
+                      )
+                  ),
+                Center(
+                  child: DotsIndicator(
+                    dotsCount: 4,
+                    position: currentPage,
+                    decorator: DotsDecorator(
+                      size: const Size.square(9.0),
+                      activeColor: Color(0xff1d3a70)
+                    ),
+                  ),
+                ),
+                  SizedBox(height: 20,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Coupon",
+                        style: TextStyle(
+                          fontFamily: 'DM Sans',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.pushNamed(context, '/vendor');
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              "View all",
+                              style: TextStyle(
+                                color: Color(0XFF3574F2),
+                                fontFamily: 'DM Sans',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                            ),
+                            Icon(
+                              (Icons.arrow_right_alt),
+                              color: Color(0XFF3574F2),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  SizedBox(
+                    width: 351,
+                    height: 357.31  ,
                     child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      separatorBuilder: (context, index) => SizedBox(width: 16.0),
+                      scrollDirection: Axis.vertical,
+                      separatorBuilder: (context, index) => SizedBox(height: 16.0),
                       shrinkWrap: true,
                       itemCount: 4,
                       physics: AlwaysScrollableScrollPhysics(),
@@ -397,72 +607,59 @@ class DashboardScreen extends StatelessWidget {
                         return Container(
                           decoration: BoxDecoration(
                             color: Color(0XFFFFFFFF),
-                            borderRadius: BorderRadius.circular(15.0),
+
+
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 35,
-                                      backgroundImage: const NetworkImage("https://upload.wikimedia.org/wikipedia/en/3/34/Jimmy_McGill_BCS_S3.png"),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 5.28,
+                                    height: 54.09,
+                                    decoration: BoxDecoration(
+                                        color: Color(0XFF3574F2),
+                                        borderRadius: BorderRadius.circular(21.0)
                                     ),
-                                    SizedBox(width: 10),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          'Paid to Monica',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 16,
-                                          ),
+                                  ),
+                                  SizedBox(width: 15),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        '30U2-95Q5-3V84',
+                                        style: TextStyle(
+                                          color: Color(0xff1b2559),
+                                          fontFamily: 'DM Sans',
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 18,
                                         ),
-                                        Text(
-                                          '15th March, 2021',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(width: 10,),
-                                    Column(
-                                      children: [
-                                        Column(
-
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            SizedBox(height: 10,),
-                                            Icon(
-                                              Icons.north_east,
-                                              size: 20,
-                                              color: Color(0xFF3574F2),
-                                            ),
-                                            SizedBox(height: 20,),
-                                            Text(
-                                              "-96.84 pts",
-                                              style: TextStyle(
-                                                color: Color(0xFF1D3A70),
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                          ],
+                                      ),
+                                      Text(
+                                        'Linda Marsh',
+                                        style: TextStyle(
+                                          fontFamily: 'DM Sans',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xffa3aed0),
                                         ),
-                                      ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(width: 50,),
+                                  Text(
+                                    "5000 pts",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'DM Sans',
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xff737784),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                ],
                               ),
                             ],
                           ),
@@ -470,6 +667,7 @@ class DashboardScreen extends StatelessWidget {
                       },
                     ),
                   ),
+
                 ],
               ),
             ),
@@ -521,14 +719,5 @@ class DashboardScreen extends StatelessWidget {
       ),
 
     );
-  }
-
-  Future<void> logoutUser(BuildContext context) async {
-    // Remove user data from shared preferences on logout
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('userToken');
-
-    // Navigate back to LoginPage
-    Navigator.pushReplacementNamed(context, '/');
   }
 }

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:token/vendor.dart';
 
 import 'dashboard.dart';
 import 'firebase_options.dart';
@@ -44,6 +45,7 @@ class MainApp extends StatelessWidget {
         '/home': (context) => homePage(),
         '/dashboard': (context) => DashboardScreen(),
         '/login':(context) => loginPage(),
+        '/vendor':(context) => VendorList(),
       },
     );
   }

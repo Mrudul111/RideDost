@@ -39,6 +39,7 @@ dependencies:
   firebase_auth: ^4.7.0
   shared_preferences: ^2.2.0
   dots_indicator: ^3.0.0
+  image_picker: ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,7 @@ flutter:
     - assets/images/logoScreen2.png
     - assets/images/Home.png
     - assets/images/rd 1.png
+    - assets/images/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

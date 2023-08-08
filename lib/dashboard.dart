@@ -2,12 +2,18 @@
 
 
 
+import 'dart:convert';
+
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'api/adminApi.dart';
 
+import 'api/jsonAPI.dart';
+import 'login.dart';
 import 'main.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -18,6 +24,33 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int currentPage = 0;
+  Map<String, dynamic> vendorDetails = {}; // Initialize an empty map
+
+  void initState() {
+    super.initState();
+    fetchVendors();
+  }
+
+  Future<void> fetchVendors() async {
+    try {
+      String? token = await Login2(phno);
+      final response = await getAllVendors(token!);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        setState(() {
+          vendorDetails = responseData; // Initialize the vendorDetails map with the parsed JSON data
+        });
+      } else {
+        print("Error fetching vendors. Status code: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error fetching vendors: $error");
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -454,6 +487,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         scrollDirection: Axis.horizontal,
                         itemCount: 4,
                         itemBuilder: (context, index) {
+                          final vendor = vendorDetails['vendors'][index];
                           return Container(
                             decoration: BoxDecoration(
                               color: Color(0XFFFFFFFF),
@@ -476,7 +510,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Text(
-                                            'Linda Marsh • LIN-120RD',
+                                            vendor['name'],
                                             style: TextStyle(
                                               color: Color(0xff1b2559),
                                               fontFamily: 'DM Sans',
@@ -493,7 +527,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               ),
                                               SizedBox(width: 5),
                                               Text(
-                                                '7489685683',
+                                                vendor['phoneNumber'],
                                                 style: TextStyle(
                                                   fontFamily: 'DM Sans',
                                                   fontSize: 12,
@@ -514,7 +548,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                     SizedBox(width: 5),
                                                     Expanded(
                                                       child: Text(
-                                                        'mrudulkilledar111@gmail.com',
+                                                        vendor['email'],
                                                         overflow: TextOverflow.ellipsis,
                                                         style: TextStyle(
                                                           fontFamily: 'DM Sans',
@@ -549,7 +583,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 Center(
                   child: DotsIndicator(
-                    dotsCount: 4,
+                    dotsCount: vendorDetails['vendors'].length,
                     position: currentPage,
                     decorator: DotsDecorator(
                       size: const Size.square(9.0),
@@ -571,7 +605,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       GestureDetector(
                         onTap: (){
-                          Navigator.pushNamed(context, '/vendor');
+                          Navigator.pushNamed(context, '/coupon');
                         },
                         child: Row(
                           children: [

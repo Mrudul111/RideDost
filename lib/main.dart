@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:token/vendor.dart';
 
+import 'coupon.dart';
 import 'dashboard.dart';
 import 'firebase_options.dart';
 import 'home.dart';
@@ -46,6 +47,7 @@ class MainApp extends StatelessWidget {
         '/dashboard': (context) => DashboardScreen(),
         '/login':(context) => loginPage(),
         '/vendor':(context) => VendorList(),
+        '/coupon':(context)=>Coupon(),
       },
     );
   }

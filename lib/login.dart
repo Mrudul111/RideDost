@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:token/dashboard.dart';
 
+import 'api/adminApi.dart';
+import 'api/jsonAPI.dart';
+String phno = "";
+
 
 class loginPage extends StatefulWidget {
   const loginPage({Key? key}) : super(key: key);
@@ -12,6 +16,7 @@ class loginPage extends StatefulWidget {
 
 class _loginPageState extends State<loginPage> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
 
@@ -56,36 +61,36 @@ class _loginPageState extends State<loginPage> {
     if (_formKey.currentState!.validate()) {
       // Perform OTP verification
       final smsCode = _otpController.text.trim();
-      await _verifyOTP(smsCode);
+      await onLogin(phno);
     }
   }
 
-  Future<void> _verifyOTP(String smsCode) async {
-    try {
-      final AuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: _verificationId,
-        smsCode: smsCode,
-      );
-
-      final UserCredential userCredential =
-      await FirebaseAuth.instance.signInWithCredential(credential);
-
-      if (userCredential.user != null) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => DashboardScreen()));
-      } else {
-        // Verification failed, show error message
-        setState(() {
-          _isWrongOTP = true;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _isWrongOTP = true;
-      });
-      print('Error verifying OTP: $e');
-    }
-  }
+  // Future<void> _verifyOTP(String smsCode) async {
+  //   try {
+  //     final AuthCredential credential = PhoneAuthProvider.credential(
+  //       verificationId: _verificationId,
+  //       smsCode: smsCode,
+  //     );
+  //
+  //     final UserCredential userCredential =
+  //     await FirebaseAuth.instance.signInWithCredential(credential);
+  //
+  //     if (userCredential.user != null) {
+  //       Navigator.pushReplacement(context,
+  //           MaterialPageRoute(builder: (context) => DashboardScreen()));
+  //     } else {
+  //       // Verification failed, show error message
+  //       setState(() {
+  //         _isWrongOTP = true;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       _isWrongOTP = true;
+  //     });
+  //     print('Error verifying OTP: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -112,23 +117,27 @@ class _loginPageState extends State<loginPage> {
                   }
                   return null;
                 },
+                onSaved: (value){
+                  phno = value!;
+                  print(phno);
+                },
               ),
             ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: TextFormField(
-                  controller: _otpController,
-                  enabled: _otpSent,
-                  decoration: InputDecoration(
-                    labelText: 'Enter OTP',
-                  ),
-                ),
-              ),
             const SizedBox(
               height: 20.0,
             ),
             ElevatedButton(
-              onPressed: _otpSent ? _verifyOtp : _sendOtp,
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save(); // Save the form data
+
+                  // Use the phno variable for further processing
+                  final token = await onLogin(phno);
+                  if(token){
+                    Navigator.pushNamed(context, '/dashboard');
+                  }
+                }
+              },
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(

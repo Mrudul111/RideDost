@@ -1,7 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/foundation.dart';
 import 'addvendor.dart';
+
+
+bool showPage1 = true;
+bool showPage2 = false;
+bool showPage3 = false;
+ValueNotifier<String> activeFilter = ValueNotifier<String>('New Vendor');
 
 class VendorList extends StatefulWidget {
   const VendorList({Key? key}) : super(key: key);
@@ -12,9 +18,7 @@ class VendorList extends StatefulWidget {
 
 class _VendorListState extends State<VendorList> {
   bool is1Active = false;
-  bool is2Active = false;
-
-  // Initial color
+  bool is2Active = false;// Initial color
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +38,7 @@ class _VendorListState extends State<VendorList> {
               color: Color(0xff1d3a70)),
         ),
       ),
-      body: SafeArea(
+      body:  SafeArea(
         child: Container(
           padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
           child: Column(
@@ -45,7 +49,7 @@ class _VendorListState extends State<VendorList> {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           setState(() {
                             is1Active = true;
                             is2Active = false;
@@ -58,13 +62,23 @@ class _VendorListState extends State<VendorList> {
                             color: is1Active ? Color(0xff2c2c2c) : Colors.white,
                             borderRadius: BorderRadius.circular(100),
                           ),
+                          child: Center(
+                            child: Text(
+                              "All",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: is1Active? Colors.white:Color(0xff828282)
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(
                         width: 5,
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           setState(() {
                             is1Active = false;
                             is2Active = true;
@@ -74,21 +88,33 @@ class _VendorListState extends State<VendorList> {
                           height: 31,
                           width: 97,
                           decoration: BoxDecoration(
-                              color: is2Active ? Color(0xff2c2c2c) : Colors.white,
-                            borderRadius: BorderRadius.circular(100)
+                              color:
+                                  is2Active ? Color(0xff2c2c2c) : Colors.white,
+                              borderRadius: BorderRadius.circular(100)),
+                          child: Center(
+                            child: Text(
+                              "New Vendor",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: is2Active? Colors.white: Color(0xff828282)
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  GestureDetector(child: Icon(Icons.filter_list_alt),
-                    onTap: (){
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return filterPopUp();
-                        });
-                  },)
+                  GestureDetector(
+                    child: Icon(Icons.filter_list_alt),
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return filterPopUp();
+                          });
+                    },
+                  )
                 ],
               ),
               SizedBox(
@@ -108,16 +134,28 @@ class _VendorListState extends State<VendorList> {
                   },
                 ),
               ),
-              SizedBox(height: 40,),
-              Align(alignment: Alignment.centerRight,child: FloatingActionButton(onPressed: (){                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return floatingButtonPopUp();
-                        });},child: Icon(Icons.add,),backgroundColor: Color(0xff111322),))
+              SizedBox(
+                height: 40,
+              ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return floatingButtonPopUp();
+                          });
+                    },
+                    child: Icon(
+                      Icons.add,
+                    ),
+                    backgroundColor: Color(0xff111322),
+                  ))
             ],
           ),
         ),
-      ),
+      )
     );
   }
 }
@@ -130,7 +168,7 @@ class VendorListItem extends StatefulWidget {
 }
 
 class _VendorListItemState extends State<VendorListItem> {
-  bool toggleValue = false;
+  bool toggleValue = true;
   toggleButton() {
     setState(() {
       toggleValue = !toggleValue;
@@ -142,18 +180,17 @@ class _VendorListItemState extends State<VendorListItem> {
     return Container(
       height: 77,
       width: 327,
-
       decoration: BoxDecoration(
         color: Color(0XFFFFFFFF),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
-
         children: [
           Row(
-
             children: [
-              SizedBox(width: 5,),
+              SizedBox(
+                width: 5,
+              ),
               CircleAvatar(
                 radius: 30,
                 backgroundImage: NetworkImage(
@@ -166,7 +203,7 @@ class _VendorListItemState extends State<VendorListItem> {
                 children: [
                   CircleAvatar(
                     radius: 5,
-                    backgroundColor: Colors.green,
+                    backgroundColor: toggleValue ? Colors.green : Colors.grey,
                   ),
                   SizedBox(
                     width: 5,
@@ -192,26 +229,33 @@ class _VendorListItemState extends State<VendorListItem> {
                     height: 20, // Reduced height
                     width: 40, // Reduced width
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0), // Adjusted border radius
+                      borderRadius:
+                          BorderRadius.circular(15.0), // Adjusted border radius
                       color: toggleValue ? Colors.green : Colors.grey,
                     ),
                     child: Stack(
                       children: <Widget>[
-
                         AnimatedPositioned(
                           child: InkWell(
                             onTap: toggleButton,
                             child: AnimatedSwitcher(
                               duration: Duration(milliseconds: 30),
-                              transitionBuilder: (Widget child, Animation<double> animation) {
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
                                 return FadeTransition(
                                   opacity: animation,
                                   child: child,
                                 );
                               },
                               child: toggleValue
-                                  ? Icon(Icons.circle, color: Colors.white, size: 15, key: UniqueKey())
-                                  : Icon(Icons.circle, color: Colors.white, size: 15, key: UniqueKey()),
+                                  ? Icon(Icons.circle,
+                                      color: Colors.white,
+                                      size: 15,
+                                      key: UniqueKey())
+                                  : Icon(Icons.circle,
+                                      color: Colors.white,
+                                      size: 15,
+                                      key: UniqueKey()),
                             ),
                           ),
                           duration: Duration(milliseconds: 300),
@@ -223,7 +267,7 @@ class _VendorListItemState extends State<VendorListItem> {
                       ],
                     ),
                   ),
-                  Icon(Icons.delete_outline_outlined,color: Color(0xff524b6b))
+                  Icon(Icons.delete_outline_outlined, color: Color(0xff524b6b))
                 ],
               )
             ],
@@ -250,15 +294,13 @@ class _filterPopUpState extends State<filterPopUp> {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         width: 875,
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-        height: 804,
-        decoration:  BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15)
-        ),
+        height: 400,
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(15)),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -270,51 +312,17 @@ class _filterPopUpState extends State<filterPopUp> {
                     color: Color(0xffdfe2be),
                     borderRadius: BorderRadius.circular(10)),
               ),
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 50,
+              ),
               Row(
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
                         isClicked1 = true;
                         isClicked2 = false;
                         isClicked3 = false;
-
-                      });
-                    },
-                    child: Container(
-                      width: 18,
-                      height: 18,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(
-                          color: isClicked1 ? Color(0xff3574f2) : Color(0xff524b6b)
-                        )
-                      ),
-                      child: isClicked1 ? Icon(Icons.check,color: Color(0xff3574f2),size: 10) : Icon(null)
-                    ),
-                  ),
-                  SizedBox(width: 10,),
-                  Text(
-                    "New Vendor",
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: "DM Sans"
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: 30,),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        isClicked2 = true;
-                        isClicked1 = false;
-                        isClicked3 = false;
-
                       });
                     },
                     child: Container(
@@ -323,33 +331,76 @@ class _filterPopUpState extends State<filterPopUp> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                             border: Border.all(
-                                color: isClicked2 ? Color(0xff3574f2) : Color(0xff524b6b)
-                            )
-                        ),
-                        child: isClicked2 ? Icon(Icons.check,color: Color(0xff3574f2),size: 10) : Icon(null)
-                    ),
+                                color: isClicked1
+                                    ? Color(0xff3574f2)
+                                    : Color(0xff524b6b))),
+                        child: isClicked1
+                            ? Icon(Icons.check,
+                                color: Color(0xff3574f2), size: 10)
+                            : Icon(null)),
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    "New Vendor",
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: "DM Sans"),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isClicked2 = true;
+                        isClicked1 = false;
+                        isClicked3 = false;
+                      });
+                    },
+                    child: Container(
+                        width: 18,
+                        height: 18,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                                color: isClicked2
+                                    ? Color(0xff3574f2)
+                                    : Color(0xff524b6b))),
+                        child: isClicked2
+                            ? Icon(Icons.check,
+                                color: Color(0xff3574f2), size: 10)
+                            : Icon(null)),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text(
                     "Approved Vendor",
                     style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
-                        fontFamily: "DM Sans"
-                    ),
+                        fontFamily: "DM Sans"),
                   )
                 ],
               ),
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
               Row(
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
                         isClicked3 = true;
                         isClicked2 = false;
                         isClicked1 = false;
-
                       });
                     },
                     child: Container(
@@ -358,41 +409,50 @@ class _filterPopUpState extends State<filterPopUp> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                             border: Border.all(
-                                color: isClicked3 ? Color(0xff3574f2) : Color(0xff524b6b)
-                            )
-                        ),
-                        child: isClicked3 ? Icon(Icons.check,color: Color(0xff3574f2),size: 10,) : Icon(null)
-                    ),
+                                color: isClicked3
+                                    ? Color(0xff3574f2)
+                                    : Color(0xff524b6b))),
+                        child: isClicked3
+                            ? Icon(
+                                Icons.check,
+                                color: Color(0xff3574f2),
+                                size: 10,
+                              )
+                            : Icon(null)),
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text(
-                    "New Vendor",
+                    "Pending",
                     style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
-                        fontFamily: "DM Sans"
-                    ),
+                        fontFamily: "DM Sans"),
                   )
                 ],
               ),
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
               Container(
                 height: 1,
                 width: 335,
                 color: Color(0xffdee1e7),
               ),
-
-              SizedBox(height: 150,),
+              SizedBox(
+                height: 100,
+              ),
               Row(
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
                         isClicked1 = false;
                         isClicked2 = false;
                         isClicked3 = false;
                       });
-                      },
+                    },
                     child: Container(
                       width: 75,
                       height: 50,
@@ -400,22 +460,42 @@ class _filterPopUpState extends State<filterPopUp> {
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.blue,
                       ),
-
                       child: Center(
                         child: Text(
                           "Reset",
                           style: TextStyle(
-                            fontFamily: "DM Sans",
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff3c3c3c)
-                          ),
+                              fontFamily: "DM Sans",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff3c3c3c)),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        if(isClicked1) {
+                          showPage1 = true;
+                          showPage2 = false;
+                          showPage3 = false;
+                        }
+                        else if(isClicked2) {
+                          showPage2 = true;
+                          showPage1 = false;
+                          showPage3 = false;
+                        }
+                        else if(isClicked3) {
+                          showPage3 = true;
+                          showPage2 = false;
+                          showPage1 = false;
+                        }
+                      });
+                      Navigator.pop(context);
+                    },
                     child: Container(
                       width: 200,
                       height: 50,
@@ -423,7 +503,6 @@ class _filterPopUpState extends State<filterPopUp> {
                         borderRadius: BorderRadius.circular(30),
                         color: Color(0xff3574F2),
                       ),
-
                       child: Center(
                         child: Text(
                           "APPLY NOW",
@@ -431,8 +510,7 @@ class _filterPopUpState extends State<filterPopUp> {
                               fontFamily: "DM Sans",
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xff3c3c3c)
-                          ),
+                              color: Color(0xff3c3c3c)),
                         ),
                       ),
                     ),
@@ -459,7 +537,7 @@ class _floatingButtonPopUpState extends State<floatingButtonPopUp> {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
@@ -473,36 +551,43 @@ class _floatingButtonPopUpState extends State<floatingButtonPopUp> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
+                height: 6,
+                width: 60,
+                decoration: BoxDecoration(
+                    color: Color(0xffdfe2be),
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Container(
                 height: 4,
                 width: MediaQuery.of(context).size.width * 0.2,
-                decoration: BoxDecoration(
-
-                    borderRadius: BorderRadius.circular(10)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
               ),
               const SizedBox(
                 height: 20,
               ),
               TextButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Color(0xffeff7ff)),
+                    backgroundColor:
+                        MaterialStateProperty.all(Color(0xffeff7ff)),
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0))),
                     padding: MaterialStateProperty.all(
                         const EdgeInsets.symmetric(horizontal: 15)),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddVendor()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AddVendor()));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.person_add_alt_1_outlined,
-                        color: Color(0xff357452),
+                        color: Color(0xff3574f2),
                         size: 27,
                       ),
                       const SizedBox(
@@ -513,7 +598,7 @@ class _floatingButtonPopUpState extends State<floatingButtonPopUp> {
                         style: TextStyle(
                             fontFamily: 'DM Sans',
                             fontWeight: FontWeight.w600,
-                            color: Color(0xff357452),
+                            color: Color(0xff3574f2),
                             fontSize: 16.0),
                       ),
                     ],
@@ -523,8 +608,8 @@ class _floatingButtonPopUpState extends State<floatingButtonPopUp> {
               ),
               TextButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Color(0xffeff7ff)),
+                    backgroundColor:
+                        MaterialStateProperty.all(Color(0xffeff7ff)),
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0))),
                     padding: MaterialStateProperty.all(
@@ -536,7 +621,7 @@ class _floatingButtonPopUpState extends State<floatingButtonPopUp> {
                     children: [
                       Icon(
                         Icons.file_upload_outlined,
-                        color: Color(0xff357452),
+                        color: Color(0xff3574f2),
                         size: 27,
                       ),
                       const SizedBox(
@@ -547,7 +632,7 @@ class _floatingButtonPopUpState extends State<floatingButtonPopUp> {
                         style: TextStyle(
                             fontFamily: 'DM Sans',
                             fontWeight: FontWeight.w600,
-                            color: Color(0xff357452),
+                            color: Color(0xff3574f2),
                             fontSize: 16.0),
                       ),
                     ],

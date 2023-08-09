@@ -10,7 +10,7 @@ class Coupon extends StatefulWidget {
 class _CouponState extends State<Coupon> {
   bool is1Active = false;
   bool is2Active = false;
-  String day = "today";
+  String day = "Today";
   int selectedContainer = 0;
   void showPopupMenu(BuildContext context) async {
     final result = await showMenu(
@@ -124,7 +124,7 @@ class _CouponState extends State<Coupon> {
                           width: 134.5,
                           height: 40.27,
                           decoration: BoxDecoration(
-                            color: is1Active ? Color(0xff334d8f) : Colors.white,
+                            color: is1Active || selectedContainer==0 ? Color(0xff334d8f) : Colors.white,
                             borderRadius: BorderRadius.circular(5),
                             border: Border.all(
                               color: Color(0xff334d8f),
@@ -136,7 +136,7 @@ class _CouponState extends State<Coupon> {
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 14,
-                                  color: is1Active? Colors.white:Color(0xff334d8f)
+                                  color: is1Active || selectedContainer==0? Colors.white:Color(0xff334d8f)
                               ),
                             ),
                           ),
@@ -155,7 +155,7 @@ class _CouponState extends State<Coupon> {
                           height: 40.27,
                           decoration: BoxDecoration(
                               color:
-                              is2Active ? Color(0xff334d8f) : Colors.white,
+                              is2Active || selectedContainer!=0 ? Color(0xff334d8f) : Colors.white,
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(
                                 color: Color(0xff334d8f),
@@ -330,10 +330,7 @@ class _CouponState extends State<Coupon> {
                                     child: Container(
                                       width: 14.09,
                                       height: 14.09,
-                                      child: Icon(
-                                        Icons.arrow_drop_down,
-                                        color: Color(0xff969696),
-                                      ),
+                                      child: Image.asset('assets/images/dropdown.png',fit: BoxFit.fitHeight ,),
                                     ),
                                   ),
                                 ],
@@ -352,16 +349,53 @@ class _CouponState extends State<Coupon> {
                                 width: 321.34,
                                 height: 56.96,
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Container(
-                                      width: 56.17,
-                                      height: 56.17,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffd08900),
-                                        borderRadius: BorderRadius.circular(14),
-                                      ),
-                                      child: Center(
-                                        child: Image.asset('assets/images/icon.png'),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 56.17,
+                                          height: 56.17,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xfff3ebd9),
+                                            borderRadius: BorderRadius.circular(14),
+                                          ),
+                                          child: Center(
+                                            child: Image.asset('assets/images/icon.png'),
+                                          ),
+                                        ),
+                                        SizedBox(width: 5,),
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              "Gym",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.85,
+                                                fontFamily: "DM Sans",
+                                              ),
+                                            ),
+                                            Text(
+                                              "Payment",
+                                              style: TextStyle(
+                                                fontFamily: "DM Sans",
+                                                fontSize: 10.3,
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xff5a5b78)
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+
+                                    Text(
+                                      "-40.99",
+                                      style: TextStyle(
+                                        fontFamily: "DM Sans",
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16.85,
                                       ),
                                     )
                                   ],

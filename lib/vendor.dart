@@ -4,9 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'addvendor.dart';
 
 
-bool showPage1 = true;
-bool showPage2 = false;
-bool showPage3 = false;
+bool showPage = true;
+int selectedContainer = 1;
 ValueNotifier<String> activeFilter = ValueNotifier<String>('New Vendor');
 
 class VendorList extends StatefulWidget {
@@ -17,8 +16,10 @@ class VendorList extends StatefulWidget {
 }
 
 class _VendorListState extends State<VendorList> {
+  GlobalKey _listKey = GlobalKey();
+  GlobalKey _otherListKey = GlobalKey();
   bool is1Active = false;
-  bool is2Active = false;// Initial color
+  bool is2Active = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,7 +112,7 @@ class _VendorListState extends State<VendorList> {
                       showModalBottomSheet(
                           context: context,
                           builder: (context) {
-                            return filterPopUp();
+                            return filterPopUp(activeFilter: activeFilter,);
                           });
                     },
                   )
@@ -120,19 +121,111 @@ class _VendorListState extends State<VendorList> {
               SizedBox(
                 height: 40,
               ),
-              SizedBox(
-                height: 348,
-                width: 375,
-                child: ListView.separated(
-                  scrollDirection: Axis.vertical,
-                  separatorBuilder: (context, index) => SizedBox(height: 16.0),
-                  shrinkWrap: true,
-                  itemCount: 4,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return VendorListItem();
-                  },
-                ),
+              ValueListenableBuilder<String>(
+                valueListenable: activeFilter,
+                builder: (context,filter,child) {
+                  if(filter=="New Vendor"){
+                    return SizedBox(
+                      height: 348,
+                      width: 375,
+                      child: ListView.separated(
+                        scrollDirection: Axis.vertical,
+                        separatorBuilder: (context, index) => SizedBox(height: 16.0),
+                        shrinkWrap: true,
+                        itemCount: 4,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Container(
+                            height: 77,
+                            width: 327,
+                            decoration: BoxDecoration(
+                              color: Color(0XFFFFFFFF),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: NetworkImage(
+                                          "https://upload.wikimedia.org/wikipedia/en/3/34/Jimmy_McGill_BCS_S3.png"),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "Vendor Name",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: 'DM Sans',
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        Text(
+                                          "view all",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontFamily: 'DM Sans',
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xff008ce4),
+                                            decoration: TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 70,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.check),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Icon(Icons.cancel_rounded)
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                  else if(filter=="Approved Vendor"){
+                    return SizedBox(
+                      height: 348,
+                      width: 375,
+                      child: ListView.separated(
+                        scrollDirection: Axis.vertical,
+                        separatorBuilder: (context, index) => SizedBox(height: 16.0),
+                        shrinkWrap: true,
+                        itemCount: 4,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return VendorListItem();
+                        },
+                      ),
+                    );
+                  }
+                  else{
+                    return Container();
+                  }
+                }
               ),
               SizedBox(
                 height: 40,
@@ -275,12 +368,14 @@ class _VendorListItemState extends State<VendorListItem> {
         ],
       ),
     );
-    ;
+
   }
 }
 
 class filterPopUp extends StatefulWidget {
-  const filterPopUp({Key? key}) : super(key: key);
+  final ValueNotifier<String> activeFilter;
+
+  const filterPopUp({Key? key, required this.activeFilter}) : super(key: key);
 
   @override
   State<filterPopUp> createState() => _filterPopUpState();
@@ -290,6 +385,15 @@ class _filterPopUpState extends State<filterPopUp> {
   bool isClicked1 = false;
   bool isClicked2 = false;
   bool isClicked3 = false;
+  void initState() {
+    super.initState();
+    // Set the initial filter value based on the activeFilter
+    if (widget.activeFilter.value == "New Vendor") {
+      setState(() {
+        isClicked1 = true;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -478,20 +582,12 @@ class _filterPopUpState extends State<filterPopUp> {
                   GestureDetector(
                     onTap: (){
                       setState(() {
-                        if(isClicked1) {
-                          showPage1 = true;
-                          showPage2 = false;
-                          showPage3 = false;
-                        }
-                        else if(isClicked2) {
-                          showPage2 = true;
-                          showPage1 = false;
-                          showPage3 = false;
-                        }
-                        else if(isClicked3) {
-                          showPage3 = true;
-                          showPage2 = false;
-                          showPage1 = false;
+                        if (isClicked1) {
+                          widget.activeFilter.value = "New Vendor";
+                        } else if (isClicked2 ) {
+                          widget.activeFilter.value = "Approved Vendor";
+                        } else if (isClicked3) {
+                          widget.activeFilter.value = "Pending";
                         }
                       });
                       Navigator.pop(context);

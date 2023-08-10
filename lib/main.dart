@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:token/request.dart';
 import 'package:token/vendor.dart';
 
 import 'coupon.dart';
@@ -48,6 +49,7 @@ class MainApp extends StatelessWidget {
         '/login':(context) => loginPage(),
         '/vendor':(context) => VendorList(),
         '/coupon':(context)=>Coupon(),
+        '/request':(context)=> RequestPage(),
       },
     );
   }

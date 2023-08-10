@@ -269,7 +269,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 bottomLeft: Radius.circular(5.0))),
                         child: TextButton(
                           onPressed: () {
-
+                            Navigator.pushNamed(context, '/request');
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

@@ -305,14 +305,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 bottomLeft: Radius.circular(5.0))),
                         child: TextButton(
                           onPressed: () {
-
+                            Navigator.pushNamed(context, '/dailyreport');
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
 
                             children: [
                               Icon(
-                                Icons.thumb_up_off_alt_outlined,
+                                Icons.access_alarm_outlined,
                                 color: Color(0xFF737784),
                                 size: 30.0,
                               ),
@@ -320,43 +320,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 width: 15.0,
                               ),
                               Text(
-                                'Approve Request',
-                                style: TextStyle(
-                                    color: Color(0xFF737784),
-                                    fontSize: 18.0,
-                                    fontFamily: 'Mazzart',
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20,),
-                      Container(
-                        height: 50.0,
-                        decoration: const BoxDecoration(
-
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5.0),
-                                bottomLeft: Radius.circular(5.0))),
-                        child: TextButton(
-                          onPressed: () {
-
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-
-                            children: [
-                              Icon(
-                                Icons.handshake,
-                                color: Color(0xFF737784),
-                                size: 30.0,
-                              ),
-                              const SizedBox(
-                                width: 15.0,
-                              ),
-                              Text(
-                                'Payment Settle',
+                                'Daily Status',
                                 style: TextStyle(
                                     color: Color(0xFF737784),
                                     fontSize: 18.0,
@@ -485,10 +449,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       height: 76  ,
                       child: PageView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: 4,
+                        itemCount: vendorDetails['vendors']?.length ?? 0,
                         itemBuilder: (context, index) {
-                          final vendor = vendorDetails['vendors'][index];
-                          return Container(
+                          final vendor = vendorDetails['vendors']?[index];                          return Container(
                             decoration: BoxDecoration(
                               color: Color(0XFFFFFFFF),
                               borderRadius: BorderRadius.circular(15.0),
@@ -583,7 +546,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 Center(
                   child: DotsIndicator(
-                    dotsCount: vendorDetails['vendors'].length,
+                    dotsCount: 4,
                     position: currentPage,
                     decorator: DotsDecorator(
                       size: const Size.square(9.0),

@@ -72,6 +72,7 @@ flutter:
     - assets/images/rd 1.png
     - assets/images/icon.png
     - assets/images/dropdown.png
+    - assets/images/Frame 162397.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

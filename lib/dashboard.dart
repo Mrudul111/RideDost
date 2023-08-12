@@ -25,10 +25,35 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int currentPage = 0;
   Map<String, dynamic> vendorDetails = {}; // Initialize an empty map
+  List<dynamic> coupons = []; // Initialize an empty list for coupons
+
 
   void initState() {
     super.initState();
     fetchVendors();
+    fetchCoupons();
+  }
+  Future<void> fetchCoupons() async {
+    try {
+      String? token = await Login2(phno);
+      final response = await getAllCoupons(token!);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        if (responseData['newCoupons'] != null && responseData['newCoupons'] is List) {
+          setState(() {
+            coupons = List.from(responseData['newCoupons']);
+          });
+        } else {
+          print("Error fetching coupons: Invalid data format");
+        }
+      } else {
+        print("Error fetching coupons. Status code: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error fetching coupons: $error");
+    }
   }
 
   Future<void> fetchVendors() async {
@@ -451,7 +476,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         scrollDirection: Axis.horizontal,
                         itemCount: vendorDetails['vendors']?.length ?? 0,
                         itemBuilder: (context, index) {
-                          final vendor = vendorDetails['vendors']?[index];                          return Container(
+                          final vendor = vendorDetails['vendors']?[index];
+                          return Container(
                             decoration: BoxDecoration(
                               color: Color(0XFFFFFFFF),
                               borderRadius: BorderRadius.circular(15.0),
@@ -598,71 +624,68 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       scrollDirection: Axis.vertical,
                       separatorBuilder: (context, index) => SizedBox(height: 16.0),
                       shrinkWrap: true,
-                      itemCount: 4,
+                      itemCount: coupons.length,
                       physics: AlwaysScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
+                        final coupon = coupons[index];
+
                         return Container(
                           decoration: BoxDecoration(
                             color: Color(0XFFFFFFFF),
-
-
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 5.28,
-                                    height: 54.09,
-                                    decoration: BoxDecoration(
-                                        color: Color(0XFF3574F2),
-                                        borderRadius: BorderRadius.circular(21.0)
-                                    ),
-                                  ),
-                                  SizedBox(width: 15),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        '30U2-95Q5-3V84',
-                                        style: TextStyle(
-                                          color: Color(0xff1b2559),
-                                          fontFamily: 'DM Sans',
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Linda Marsh',
-                                        style: TextStyle(
-                                          fontFamily: 'DM Sans',
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xffa3aed0),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(width: 50,),
-                                  Text(
-                                    "5000 pts",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'DM Sans',
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xff737784),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10,),
-                                ],
+                              Container(
+                                width: 5.28,
+                                height: 54.09,
+                                decoration: BoxDecoration(
+                                  color: Color(0XFF3574F2),
+                                  borderRadius: BorderRadius.circular(21.0),
+                                ),
                               ),
+                              SizedBox(width: 15),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      coupon['couponCode'],
+                                      style: TextStyle(
+                                        color: Color(0xff1b2559),
+                                        fontFamily: 'DM Sans',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Text(
+                                      coupon['userName'],
+                                      style: TextStyle(
+                                        fontFamily: 'DM Sans',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xffa3aed0),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                coupon['point'],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'DM Sans',
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xff737784),
+                                ),
+                              ),
+                              SizedBox(width: 10),
                             ],
                           ),
                         );
                       },
-                    ),
+                    )
+
                   ),
 
                 ],

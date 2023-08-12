@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'addvendor.dart';
+import 'api/jsonAPI.dart';
+import 'login.dart';
 
 
 bool showPage = true;
@@ -18,6 +22,29 @@ class VendorList extends StatefulWidget {
 class _VendorListState extends State<VendorList> {
   GlobalKey _listKey = GlobalKey();
   GlobalKey _otherListKey = GlobalKey();
+  Map<String, dynamic> vendorDetails = {}; // Initialize an empty map
+  void initState() {
+    super.initState();
+    fetchVendors();
+  }
+  Future<void> fetchVendors() async {
+    try {
+      String? token = await Login2(phno);
+      final response = await getAllVendors(token!);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        setState(() {
+          vendorDetails = responseData;
+        });
+      } else {
+        print("Error fetching vendors. Status code: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error fetching vendors: $error");
+    }
+  }
   bool is1Active = false;
   bool is2Active = false;
   @override
@@ -135,75 +162,80 @@ class _VendorListState extends State<VendorList> {
                         itemCount: 4,
                         physics: AlwaysScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return Container(
-                            height: 77,
-                            width: 327,
-                            decoration: BoxDecoration(
-                              color: Color(0XFFFFFFFF),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Row(
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage: NetworkImage(
-                                          "https://upload.wikimedia.org/wikipedia/en/3/34/Jimmy_McGill_BCS_S3.png"),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          "Vendor Name",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontFamily: 'DM Sans',
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black,
+                          final vendors = vendorDetails['vendors'] as List<dynamic>?;
+                          if (vendors != null && index < vendors.length) {
+                            final vendor = vendors[index];
+                            return Container(
+                              height: 77,
+                              width: 327,
+                              decoration: BoxDecoration(
+                                color: Color(0XFFFFFFFF),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage: NetworkImage(
+                                            "https://upload.wikimedia.org/wikipedia/en/3/34/Jimmy_McGill_BCS_S3.png"),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: 5,
                                           ),
-                                        ),
-                                        Text(
-                                          "view all",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            fontFamily: 'DM Sans',
-                                            fontWeight: FontWeight.w700,
-                                            color: Color(0xff008ce4),
-                                            decoration: TextDecoration.underline,
+                                          Text(
+                                            vendor['name'],
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontFamily: 'DM Sans',
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 70,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.check),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Icon(Icons.cancel_rounded)
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
+                                          Text(
+                                            "view all",
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontFamily: 'DM Sans',
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xff008ce4),
+                                              decoration: TextDecoration.underline,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.check),
+                                      SizedBox(
+                                        width: 10, // Space between icons
+                                      ),
+                                      Icon(Icons.cancel_rounded)
+                                    ],
+                                  )
+                                ],
+                              ),
+                            );
+                          } else {
+                            return CircularProgressIndicator();
+                          }
                         },
                       ),
+
                     );
                   }
                   else if(filter=="Approved Vendor"){

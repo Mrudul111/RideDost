@@ -71,3 +71,21 @@ Future<dynamic> getAllVendors(String token) async {
   }
 }
 
+Future<http.Response> getAllCoupons(String token) async {
+  final String baseUrl = apiUrl; // Replace with your actual base URL
+  final String url = '$baseUrl/admin/coupons';
+
+  try {
+    final http.Response response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+

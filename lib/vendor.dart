@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:token/productlisting.dart';
 import 'addvendor.dart';
 import 'api/jsonAPI.dart';
 import 'login.dart';
@@ -56,7 +57,7 @@ class _VendorListState extends State<VendorList> {
           color: Color(0xff1d3a70),
         ),
         elevation: 0,
-        backgroundColor: Color(0xffffffff),
+        backgroundColor: Color(0xFFF2F2F2),
         title: Text(
           "New Vendor",
           style: TextStyle(
@@ -68,7 +69,7 @@ class _VendorListState extends State<VendorList> {
       ),
       body:  SafeArea(
         child: Container(
-          padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
+          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
           child: Column(
             children: [
               Row(
@@ -436,7 +437,7 @@ class _filterPopUpState extends State<filterPopUp> {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         height: 400,
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(15)),
+            color: Color(0xfff2f2f2), borderRadius: BorderRadius.circular(15)),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -594,7 +595,7 @@ class _filterPopUpState extends State<filterPopUp> {
                       height: 50,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue,
+                        color: Colors.white,
                       ),
                       child: Center(
                         child: Text(
@@ -743,7 +744,9 @@ class _floatingButtonPopUpState extends State<floatingButtonPopUp> {
                     padding: MaterialStateProperty.all(
                         const EdgeInsets.symmetric(horizontal: 15)),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>productListing()));
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

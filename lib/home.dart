@@ -44,17 +44,19 @@ class _homePageState extends State<homePage> {
                       ),
                     ),
                     SizedBox(height: 30),
-                    Center(
-                      child: Container(
+                    Expanded(
+                      child: Center(
+                        child: Container(
 
-                        width: 263.09,
-                        height: 392.70,
-                        decoration: BoxDecoration(
+                          width: 263.09,
+                          height: 392.70,
+                          decoration: BoxDecoration(
 
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/logoScreen2.png'),
-                            fit: BoxFit.cover,
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/logoScreen2.png'),
+                              fit: BoxFit.cover,
 
+                            ),
                           ),
                         ),
                       ),

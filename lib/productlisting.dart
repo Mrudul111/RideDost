@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:token/addvendor.dart';
 
-class OwnerDetails extends StatefulWidget {
-  const OwnerDetails({Key? key}) : super(key: key);
+class productListing extends StatefulWidget {
+  const productListing({super.key});
 
   @override
-  State<OwnerDetails> createState() => _OwnerDetailsState();
+  State<productListing> createState() => _productListingState();
 }
 
-class _OwnerDetailsState extends State<OwnerDetails> {
+class _productListingState extends State<productListing> {
   final _key = GlobalKey<FormState>();
 
   @override
@@ -18,9 +17,9 @@ class _OwnerDetailsState extends State<OwnerDetails> {
       backgroundColor: Color(0xFFF2F2F2),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color(0xFFF2F2F2),
+        backgroundColor: Color(0xfff9fafc),
         iconTheme: IconThemeData(
-          color: Color(0xff133039),
+          color: Color(0xFFF2F2F2),
         ),
       ),
       body: Form(
@@ -32,7 +31,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Owner Details",
+                  "Add Listing",
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 24,
@@ -47,68 +46,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Full Name",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                        fontFamily: "DM Sans",
-                        color: Color(0xff0f172a),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 309,
-                      height: 46.3,
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter this field';
-                          }
-                          return null;
-                        },
-                        onSaved: (newValue) {},
-                        style: const TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: InputDecoration(
-                            fillColor: Color(0xfff5f8fb),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            hintText: "Full Name",
-                            hintStyle: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              color: Color(0xff64748b),
-                            )),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      "ID Proof",
+                      "Product image",
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 13,
@@ -140,7 +78,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Text(
-                                    "ID Proof",
+                                    "choose file",
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontWeight: FontWeight.w400,
@@ -165,7 +103,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                       height: 30,
                     ),
                     Text(
-                      "Phone Number",
+                      "Product Name",
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 13,
@@ -193,7 +131,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                           color: Colors.black,
                           fontWeight: FontWeight.w400,
                         ),
-                        keyboardType: TextInputType.phone,
+                        keyboardType: TextInputType.name,
                         textCapitalization: TextCapitalization.words,
                         decoration: InputDecoration(
                             fillColor: Color(0xfff5f8fb),
@@ -213,7 +151,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                               borderSide: BorderSide(
                                   width: 0.9, color: Color(0xffcbd5e1)),
                             ),
-                            hintText: "+91 5245XXXX74",
+                            hintText: "Product name",
                             hintStyle: TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w400,
@@ -226,7 +164,7 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                       height: 30,
                     ),
                     Text(
-                      "Email ID",
+                      "Product Price",
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 13,
@@ -274,7 +212,68 @@ class _OwnerDetailsState extends State<OwnerDetails> {
                               borderSide: BorderSide(
                                   width: 0.9, color: Color(0xffcbd5e1)),
                             ),
-                            hintText: "Email ID",
+                            hintText: "Product Price",
+                            hintStyle: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15,
+                              color: Color(0xff64748b),
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      "Listing Overview / Description",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        fontFamily: "DM Sans",
+                        color: Color(0xff0f172a),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: 309,
+                      height: 86,
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter this field';
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {},
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 12,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        keyboardType: TextInputType.text,
+                        textCapitalization: TextCapitalization.words,
+                        decoration: InputDecoration(
+                            fillColor: Color(0xfff5f8fb),
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  width: 0.9, color: Color(0xffcbd5e1)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  width: 0.9, color: Color(0xffcbd5e1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  width: 0.9, color: Color(0xffcbd5e1)),
+                            ),
+                            hintText: "overview",
                             hintStyle: TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w400,

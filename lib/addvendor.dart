@@ -17,10 +17,10 @@ class _AddVendorState extends State<AddVendor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff9fafc),
+      backgroundColor: Color(0xFFF2F2F2),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color(0xfff9fafc),
+        backgroundColor: Color(0xFFF2F2F2),
         iconTheme: IconThemeData(
           color: Color(0xff133039),
         ),
@@ -62,12 +62,12 @@ class _AddVendorState extends State<AddVendor> {
                       height: 46.3,
                       child: TextFormField(
 
-                        // validator: (value) {
-                        //   if (value!.isEmpty) {
-                        //     return 'Please enter the tokens';
-                        //   }
-                        //   return null;
-                        // },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter this field';
+                          }
+                          return null;
+                        },
 
                         onSaved: (newValue) {},
                         style: const TextStyle(
@@ -177,12 +177,12 @@ class _AddVendorState extends State<AddVendor> {
                       height: 46.3,
                       child: TextFormField(
 
-                        // validator: (value) {
-                        //   if (value!.isEmpty) {
-                        //     return 'Please enter the tokens';
-                        //   }
-                        //   return null;
-                        // },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter this field';
+                          }
+                          return null;
+                        },
 
                         onSaved: (newValue) {},
                         style: const TextStyle(
@@ -237,12 +237,12 @@ class _AddVendorState extends State<AddVendor> {
                       height: 46.3,
                       child: TextFormField(
 
-                        // validator: (value) {
-                        //   if (value!.isEmpty) {
-                        //     return 'Please enter the tokens';
-                        //   }
-                        //   return null;
-                        // },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter this field';
+                          }
+                          return null;
+                        },
 
                         onSaved: (newValue) {},
                         style: const TextStyle(
@@ -297,12 +297,12 @@ class _AddVendorState extends State<AddVendor> {
                       height: 86,
                       child: TextFormField(
 
-                        // validator: (value) {
-                        //   if (value!.isEmpty) {
-                        //     return 'Please enter the tokens';
-                        //   }
-                        //   return null;
-                        // },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter this field';
+                          }
+                          return null;
+                        },
 
                         onSaved: (newValue) {},
                         style: const TextStyle(
@@ -346,7 +346,7 @@ class _AddVendorState extends State<AddVendor> {
                       children: [
                         GestureDetector(
                           onTap: (){
-                            Navigator.pushNamedAndRemoveUntil(context, '/vendor', (route) => false);
+                            Navigator.pop(context);
                           },
                           child: Container(
                             height: 58,
@@ -366,8 +366,11 @@ class _AddVendorState extends State<AddVendor> {
                         SizedBox(width: 10,),
                         GestureDetector(
                           onTap: (){
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => OwnerDetails()));
+                            if (_key.currentState!.validate()) {
+                              Navigator.push(context,
+                                  MaterialPageRoute(
+                                      builder: (context) => OwnerDetails()));
+                            }
                           },
                           child: Container(
                             height: 58,

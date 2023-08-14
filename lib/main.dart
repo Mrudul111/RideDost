@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:token/addvendor.dart';
 import 'package:token/dailyReport.dart';
 import 'package:token/request.dart';
 import 'package:token/vendor.dart';
@@ -49,6 +50,7 @@ class MainApp extends StatelessWidget {
         '/dashboard': (context) => DashboardScreen(),
         '/login':(context) => loginPage(),
         '/vendor':(context) => VendorList(),
+        '/addvendor':(context)=>AddVendor(),
         '/coupon':(context)=>Coupon(),
         '/request':(context)=> RequestPage(),
         '/dailyreport':(context)=> dailyReport(),

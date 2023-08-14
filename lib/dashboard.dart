@@ -79,13 +79,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFBFBFB),
+      backgroundColor: Color(0xFFF2F2F2),
       appBar: AppBar(
         elevation: 0,
         iconTheme: IconThemeData(
-          color: Colors.grey,
+          color: Colors.black,
         ),
-        backgroundColor: Color(0xFFFDFDFD),
+        backgroundColor: Color(0xFFF2F2F2),
       ),
       drawer: Drawer(
 
@@ -108,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Container(
                         height: 50.0,
                         decoration:  BoxDecoration(
-                            color: currentRoute == '/' ? Colors.blue : Colors.transparent,
+                            color: currentRoute == '/dashboard' ? Color(0xff3574f2) : Colors.transparent,
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(5.0),
                                 bottomLeft: Radius.circular(5.0))),
@@ -122,7 +122,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             children: [
                               Icon(
                                 Icons.dashboard,
-                                color:  Color(0xFF737784),
+                                color:  currentRoute=='/dashboard'? Colors.black : Color(0xFF737784),
                                 size: 30.0,
                               ),
                               const SizedBox(
@@ -131,7 +131,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Text(
                                 'Dashboard',
                                 style: TextStyle(
-                                    color:  Color(0xFF737784),
+                                    color:  currentRoute=='/dashboard'? Colors.black : Color(0xFF737784),
                                     fontSize: 18.0,
                                     fontFamily: 'Mazzart',
                                     fontWeight: FontWeight.w500),
@@ -179,14 +179,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       SizedBox(height: 20,),
                       Container(
                         height: 50.0,
-                        decoration: const BoxDecoration(
+                        decoration:  BoxDecoration(
+                            color: currentRoute == '/addvendor' ? Color(0xff3574f2) : Colors.transparent,
 
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(5.0),
                                 bottomLeft: Radius.circular(5.0))),
                         child: TextButton(
                           onPressed: () {
-
+                            Navigator.pushNamed(context, '/addvendor');
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -194,7 +195,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             children: [
                               Icon(
                                 Icons.group_add_outlined,
-                                color: Color(0xFF737784),
+                                color: currentRoute=='/addvendor'?Colors.black:Color(0xFF737784),
                                 size: 30.0,
                               ),
                               const SizedBox(
@@ -203,7 +204,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Text(
                                 'Add Vendor',
                                 style: TextStyle(
-                                    color: Color(0xFF737784),
+                                    color: currentRoute=='/addvendor'?Colors.black:Color(0xFF737784),
                                     fontSize: 18.0,
                                     fontFamily: 'Mazzart',
                                     fontWeight: FontWeight.w500),
@@ -215,14 +216,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       SizedBox(height: 20,),
                       Container(
                         height: 50.0,
-                        decoration: const BoxDecoration(
+                        decoration:  BoxDecoration(
+                            color: currentRoute == '/vendor' ? Color(0xff3574f2) : Colors.transparent,
 
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(5.0),
                                 bottomLeft: Radius.circular(5.0))),
                         child: TextButton(
                           onPressed: () {
-
+                            Navigator.pushNamed(context, '/vendor');
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -471,7 +473,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   SizedBox(height: 10,),
                   SizedBox(
                       width: 662,
-                      height: 76  ,
+                      height: 85   ,
                       child: PageView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: vendorDetails['vendors']?.length ?? 0,
@@ -572,7 +574,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 Center(
                   child: DotsIndicator(
-                    dotsCount: 4,
+                    dotsCount: vendorDetails['vendors']?.length,
                     position: currentPage,
                     decorator: DotsDecorator(
                       size: const Size.square(9.0),

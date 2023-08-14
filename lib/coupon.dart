@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import 'api/jsonAPI.dart';
+import 'login.dart';
+List<dynamic> coupons = []; // Initialize an empty list for coupons
 class Coupon extends StatefulWidget {
   const Coupon({Key? key}) : super(key: key);
 
@@ -13,6 +18,35 @@ class _CouponState extends State<Coupon> {
   bool is2Active = false;
   String day = "Today";
   int selectedContainer = 0;
+  Future<void> fetchCoupons() async {
+    try {
+      String? token = await Login2(phno);
+      final response = await getAllCoupons(token!);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        if (responseData['newCoupons'] != null && responseData['newCoupons'] is List) {
+          setState(() {
+            coupons = List.from(responseData['newCoupons']);
+            print(coupons);
+          });
+        } else {
+          print("Error fetching coupons: Invalid data format");
+        }
+      } else {
+        print("Error fetching coupons. Status code: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error fetching coupons: $error");
+    }
+  }
+@override
+  void initState() {
+    // TODO: implement initState
+  fetchCoupons();
+    super.initState();
+  }
   void showPopupMenu(BuildContext context) async {
     final result = await showMenu(
       context: context,
@@ -42,7 +76,7 @@ class _CouponState extends State<Coupon> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff9fbff),
+      backgroundColor: Color(0xFFF2F2F2),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color(0xff1d3a70),
@@ -199,11 +233,184 @@ class _CouponState extends State<Coupon> {
                                   mainAxisSpacing: 10.0, // Spacing between rows
                                   crossAxisSpacing: 10.0, // Spacing between columns
                                 ),
-                                itemCount: 10, // Number of items in the grid
+                                itemCount: coupons.length, // Number of items in the grid
                                 itemBuilder: (BuildContext context, int index) {
+                                  final coupon = coupons[index];
                                   return GestureDetector(
                                     onTap: (){
-                                       showModalBottomSheet(context: context, builder: (context){return couponBar();});
+                                       showModalBottomSheet(context: context, builder: (context){return Padding(
+                                         padding:
+                                         EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                         child: Container(
+                                           width: double.infinity,
+                                           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                                           height: 375,
+                                           decoration: const BoxDecoration(
+                                               color: Colors.white,
+                                               borderRadius: BorderRadius.only(
+                                                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                                           child: Column(
+                                             children: [
+                                               SizedBox(height: 20,),
+                                               Row(
+                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                 children: [
+                                                   Column(
+                                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                                     children: [
+                                                       Text(
+                                                         "Store Name",
+                                                         style: TextStyle(
+                                                           fontSize: 25,
+                                                           fontFamily: "SF Pro Display",
+                                                           fontWeight: FontWeight.w700,
+                                                           color: Color(0xff150b3d),
+                                                         ),
+                                                       ),
+                                                       Text(
+                                                         coupon['couponCode'],
+                                                         style: TextStyle(
+                                                           fontSize: 15,
+                                                           fontFamily: "SF Pro Display",
+                                                           fontWeight: FontWeight.w300,
+                                                           color: Color(0xff737784),
+                                                         ),
+                                                       )
+                                                     ],
+                                                   ),
+                                                   Container(
+                                                     width: 48,
+                                                     height: 48,
+                                                     decoration: BoxDecoration(
+                                                         borderRadius: BorderRadius.circular(6),
+                                                         color: Color(0xff3574f2)
+                                                     ),
+                                                     child: Center(
+                                                       child: Text(
+                                                         coupon['point']+"\nPTS",
+                                                         style: TextStyle(
+                                                           fontFamily: "SF Pro Display",
+                                                           fontWeight: FontWeight.w300,
+                                                           fontSize: 11,
+                                                           color: Color(0xffffffff),
+
+                                                         ),
+                                                       ),
+                                                     ),
+                                                   )
+                                                 ],
+                                               ),
+                                               SizedBox(height: 50,),
+                                               Container(
+                                                 width: 297,
+                                                 height: 50.13,
+                                                 decoration: BoxDecoration(
+                                                   border: Border.all(
+                                                     color: Color(0xff150b3d),
+                                                     width: 2.0, // Adjust the border width as needed
+
+                                                   ),
+                                                 ),
+                                                 child: Center(
+                                                   child: Text(
+                                                     coupon['couponCode'],
+                                                     style: TextStyle(
+                                                       fontFamily: "SF Pro Display",
+                                                       color: Color(0xff150b3d),
+                                                       fontWeight: FontWeight.w700,
+                                                       fontSize: 22.7,
+                                                     ),
+                                                   ),
+                                                 ),
+                                               ),
+                                               SizedBox(height: 5,),
+                                               Row(
+                                                 mainAxisAlignment: MainAxisAlignment.center,
+                                                 children: [
+                                                   Row(
+                                                     children: [
+                                                       Icon(Icons.access_time_outlined,color: Color(0xff737784),size: 13.66,),
+                                                       Text(
+                                                         "20 days left",
+                                                         style: TextStyle(
+                                                           color: Color(0xff737784),
+                                                           fontFamily: "SF Pro Display",
+                                                           fontSize: 13.66,
+                                                           fontWeight: FontWeight.w300,
+                                                         ),
+                                                       ),
+                                                     ],
+                                                   ),
+                                                   SizedBox(width:10),
+                                                   Row(
+                                                     children: [
+                                                       Icon(Icons.local_offer_outlined,color: Color(0xff737784),size: 13.66,),
+                                                       Text(
+                                                         "No minimum purchase",
+                                                         style: TextStyle(
+                                                           color: Color(0xff737784),
+                                                           fontFamily: "SF Pro Display",
+                                                           fontSize: 13.66,
+                                                           fontWeight: FontWeight.w300,
+                                                         ),
+                                                       ),
+                                                     ],
+                                                   ),
+                                                 ],
+                                               ),
+                                               SizedBox(height: 40,),
+                                               GestureDetector(
+                                                 onTap: (){
+                                                   showModalBottomSheet(context: context, builder: (context){return QR();});
+                                                 },
+                                                 child: Container(
+                                                   width: 327,
+                                                   height: 56,
+                                                   decoration: BoxDecoration(
+                                                     color: Color(0xff3574f2),
+                                                     borderRadius: BorderRadius.circular(30),
+                                                   ),
+                                                   child: Center(
+                                                     child: Text(
+                                                       "Generate QR Code",
+                                                       style: TextStyle(
+                                                         color: Colors.white,
+                                                         fontFamily: "SF Pro Display",
+                                                         fontSize: 16,
+                                                         fontWeight: FontWeight.w500,
+                                                       ),
+                                                     ),
+                                                   ),
+                                                 ),
+                                               ),
+                                               SizedBox(height: 10),
+                                               Row(
+                                                 mainAxisAlignment: MainAxisAlignment.center,
+                                                 children: [
+                                                   Text(
+                                                     "Have any issue?",
+                                                     style: TextStyle(
+                                                       color: Color(0xff737784),
+                                                       fontFamily: "SF Pro Display",
+                                                       fontSize: 14,
+                                                       fontWeight: FontWeight.w400,
+                                                     ),
+                                                   ),
+                                                   Text(
+                                                     "Contact Us",
+                                                     style: TextStyle(
+                                                       color: Color(0xff1d3a70),
+                                                       fontFamily: "SF Pro Display",
+                                                       fontSize: 16.94,
+                                                       fontWeight: FontWeight.w700,
+                                                     ),
+                                                   )
+                                                 ],
+                                               )
+                                             ],
+                                           ),
+                                         ),
+                                       );});
                                     },
                                     child: Container(
                                       padding: EdgeInsets.all(8),
@@ -224,7 +431,7 @@ class _CouponState extends State<Coupon> {
                                             ),
                                           ),
                                           Text(
-                                            "30U2-95Q5-3V84 • Linda Marsh",
+                                            coupon['couponCode'] ?? "No Coupon Code",
                                             style: TextStyle(
                                               fontFamily: "DM Sans",
                                               fontWeight: FontWeight.w400,
@@ -267,7 +474,7 @@ class _CouponState extends State<Coupon> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    "11 JUN 2023",
+                                                    coupon['expirationDate'],
                                                     style: TextStyle(
                                                       fontFamily: "SF Pro Display",
                                                       fontWeight: FontWeight.w700,
@@ -287,7 +494,7 @@ class _CouponState extends State<Coupon> {
                                                 ),
                                                 child: Center(
                                                   child: Text(
-                                                    "500\nPTS",
+                                                    coupon['point'] ?? "0",
                                                     style: TextStyle(
                                                       fontFamily: "SF Pro Display",
                                                       fontWeight: FontWeight.w300,
@@ -473,7 +680,7 @@ class _couponBarState extends State<couponBar> {
                       ),
                     ),
                     Text(
-                      "Flat Rs 300 OFFF on All Orders",
+                      coupons[0]['couponCode'],
                       style: TextStyle(
                         fontSize: 15,
                         fontFamily: "SF Pro Display",

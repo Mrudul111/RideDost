@@ -97,305 +97,303 @@ class _DashboardScreenState extends State<DashboardScreen> {
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(left: 50.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(height: 50,),
-                      Image(image: AssetImage('assets/images/rd 1.png'),fit: BoxFit.fitWidth,),
-                      SizedBox(height: 50,),
-                      Container(
-                        height: 50.0,
-                        decoration:  BoxDecoration(
-                            color: currentRoute == '/dashboard' ? Color(0xff3574f2) : Colors.transparent,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5.0),
-                                bottomLeft: Radius.circular(5.0))),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(height: 50,),
+                    Image(image: AssetImage('assets/images/rd 1.png'),fit: BoxFit.fitWidth,),
+                    SizedBox(height: 50,),
+                    Container (
+                      height: 50.0,
+                      decoration:  BoxDecoration(
+                          color: currentRoute == '/dashboard' ? Color(0xff3574f2) : Colors.transparent,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0))),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
 
-                            children: [
-                              Icon(
-                                Icons.dashboard,
-                                color:  currentRoute=='/dashboard'? Colors.black : Color(0xFF737784),
-                                size: 30.0,
-                              ),
-                              const SizedBox(
-                                width: 15.0,
-                              ),
-                              Text(
-                                'Dashboard',
-                                style: TextStyle(
-                                    color:  currentRoute=='/dashboard'? Colors.black : Color(0xFF737784),
-                                    fontSize: 18.0,
-                                    fontFamily: 'Mazzart',
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+                          children: [
+                            Icon(
+                              Icons.dashboard,
+                              color:  currentRoute=='/dashboard'? Colors.black : Color(0xFF737784),
+                              size: 30.0,
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Text(
+                              'Dashboard',
+                              style: TextStyle(
+                                  color:  currentRoute=='/dashboard'? Colors.black : Color(0xFF737784),
+                                  fontSize: 18.0,
+                                  fontFamily: 'Mazzart',
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
                         ),
                       ),
-                      SizedBox(height: 20,),
-                      Container(
-                        height: 50.0,
-                        decoration:  BoxDecoration(
-                            color: currentRoute == '/manageteam' ? Colors.blue : Colors.transparent,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5.0),
-                                bottomLeft: Radius.circular(5.0))),
-                        child: TextButton(
-                          onPressed: () {
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      height: 50.0,
+                      decoration:  BoxDecoration(
+                          color: currentRoute == '/manageteam' ? Colors.blue : Colors.transparent,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0))),
+                      child: TextButton(
+                        onPressed: () {
 
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
 
-                            children: [
-                              Icon(
-                                Icons.people_alt_outlined,
-                                color: Color(0xFF737784),
-                                size: 30.0,
-                              ),
-                              const SizedBox(
-                                width: 15.0,
-                              ),
-                              Text(
-                                'Manage Team',
-                                style: TextStyle(
-                                    color: Color(0xFF737784),
-                                    fontSize: 18.0,
-                                    fontFamily: 'Mazzart',
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+                          children: [
+                            Icon(
+                              Icons.people_alt_outlined,
+                              color: Color(0xFF737784),
+                              size: 30.0,
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Text(
+                              'Manage Team',
+                              style: TextStyle(
+                                  color: Color(0xFF737784),
+                                  fontSize: 18.0,
+                                  fontFamily: 'Mazzart',
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
                         ),
                       ),
-                      SizedBox(height: 20,),
-                      Container(
-                        height: 50.0,
-                        decoration:  BoxDecoration(
-                            color: currentRoute == '/addvendor' ? Color(0xff3574f2) : Colors.transparent,
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      height: 50.0,
+                      decoration:  BoxDecoration(
+                          color: currentRoute == '/addvendor' ? Color(0xff3574f2) : Colors.transparent,
 
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5.0),
-                                bottomLeft: Radius.circular(5.0))),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/addvendor');
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0))),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/addvendor');
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
 
-                            children: [
-                              Icon(
-                                Icons.group_add_outlined,
-                                color: currentRoute=='/addvendor'?Colors.black:Color(0xFF737784),
-                                size: 30.0,
-                              ),
-                              const SizedBox(
-                                width: 15.0,
-                              ),
-                              Text(
-                                'Add Vendor',
-                                style: TextStyle(
-                                    color: currentRoute=='/addvendor'?Colors.black:Color(0xFF737784),
-                                    fontSize: 18.0,
-                                    fontFamily: 'Mazzart',
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+                          children: [
+                            Icon(
+                              Icons.group_add_outlined,
+                              color: currentRoute=='/addvendor'?Colors.black:Color(0xFF737784),
+                              size: 30.0,
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Text(
+                              'Add Vendor',
+                              style: TextStyle(
+                                  color: currentRoute=='/addvendor'?Colors.black:Color(0xFF737784),
+                                  fontSize: 18.0,
+                                  fontFamily: 'Mazzart',
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
                         ),
                       ),
-                      SizedBox(height: 20,),
-                      Container(
-                        height: 50.0,
-                        decoration:  BoxDecoration(
-                            color: currentRoute == '/vendor' ? Color(0xff3574f2) : Colors.transparent,
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      height: 50.0,
+                      decoration:  BoxDecoration(
+                          color: currentRoute == '/vendor' ? Color(0xff3574f2) : Colors.transparent,
 
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5.0),
-                                bottomLeft: Radius.circular(5.0))),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/vendor');
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0))),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/vendor');
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
 
-                            children: [
-                              Icon(
-                                Icons.groups,
-                                color: Color(0xFF737784),
-                                size: 30.0,
-                              ),
-                              const SizedBox(
-                                width: 15.0,
-                              ),
-                              Text(
-                                'Vendor List',
-                                style: TextStyle(
-                                    color: Color(0xFF737784),
-                                    fontSize: 18.0,
-                                    fontFamily: 'Mazzart',
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+                          children: [
+                            Icon(
+                              Icons.groups,
+                              color: Color(0xFF737784),
+                              size: 30.0,
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Text(
+                              'Vendor List',
+                              style: TextStyle(
+                                  color: Color(0xFF737784),
+                                  fontSize: 18.0,
+                                  fontFamily: 'Mazzart',
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
                         ),
                       ),
-                      SizedBox(height: 20,),
-                      Container(
-                        height: 50.0,
-                        decoration: const BoxDecoration(
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      height: 50.0,
+                      decoration: const BoxDecoration(
 
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5.0),
-                                bottomLeft: Radius.circular(5.0))),
-                        child: TextButton(
-                          onPressed: () {
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0))),
+                      child: TextButton(
+                        onPressed: () {
 
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
 
-                            children: [
-                              Icon(
-                                Icons.shopping_cart_outlined,
-                                color: Color(0xFF737784),
-                                size: 30.0,
-                              ),
-                              const SizedBox(
-                                width: 15.0,
-                              ),
-                              Text(
-                                'Product List',
-                                style: TextStyle(
-                                    color: Color(0xFF737784),
-                                    fontSize: 18.0,
-                                    fontFamily: 'Mazzart',
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+                          children: [
+                            Icon(
+                              Icons.shopping_cart_outlined,
+                              color: Color(0xFF737784),
+                              size: 30.0,
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Text(
+                              'Product List',
+                              style: TextStyle(
+                                  color: Color(0xFF737784),
+                                  fontSize: 18.0,
+                                  fontFamily: 'Mazzart',
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
                         ),
                       ),
-                      SizedBox(height: 20,),
-                      Container(
-                        height: 50.0,
-                        decoration: const BoxDecoration(
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      height: 50.0,
+                      decoration: const BoxDecoration(
 
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5.0),
-                                bottomLeft: Radius.circular(5.0))),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/request');
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0))),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/request');
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
 
-                            children: [
-                              Icon(
-                                Icons.send_rounded,
-                                color: Color(0xFF737784),
-                                size: 30.0,
-                              ),
-                              const SizedBox(
-                                width: 15.0,
-                              ),
-                              Text(
-                                'Send Request',
-                                style: TextStyle(
-                                    color: Color(0xFF737784),
-                                    fontSize: 18.0,
-                                    fontFamily: 'Mazzart',
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+                          children: [
+                            Icon(
+                              Icons.send_rounded,
+                              color: Color(0xFF737784),
+                              size: 30.0,
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Text(
+                              'Send Request',
+                              style: TextStyle(
+                                  color: Color(0xFF737784),
+                                  fontSize: 18.0,
+                                  fontFamily: 'Mazzart',
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
                         ),
                       ),
-                      SizedBox(height: 20,),
-                      Container(
-                        height: 50.0,
-                        decoration: const BoxDecoration(
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      height: 50.0,
+                      decoration: const BoxDecoration(
 
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5.0),
-                                bottomLeft: Radius.circular(5.0))),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/dailyreport');
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0))),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/dailyreport');
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
 
-                            children: [
-                              Icon(
-                                Icons.access_alarm_outlined,
-                                color: Color(0xFF737784),
-                                size: 30.0,
-                              ),
-                              const SizedBox(
-                                width: 15.0,
-                              ),
-                              Text(
-                                'Daily Status',
-                                style: TextStyle(
-                                    color: Color(0xFF737784),
-                                    fontSize: 18.0,
-                                    fontFamily: 'Mazzart',
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+                          children: [
+                            Icon(
+                              Icons.access_alarm_outlined,
+                              color: Color(0xFF737784),
+                              size: 30.0,
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Text(
+                              'Daily Status',
+                              style: TextStyle(
+                                  color: Color(0xFF737784),
+                                  fontSize: 18.0,
+                                  fontFamily: 'Mazzart',
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
                         ),
                       ),
-                      SizedBox(height: 20,),
-                      Container(
-                        height: 50.0,
-                        decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5.0),
-                                bottomLeft: Radius.circular(5.0))),
-                        child: TextButton(
-                          onPressed:  () async {
-                            await FirebaseAuth.instance.signOut();
-                            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      height: 50.0,
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0))),
+                      child: TextButton(
+                        onPressed:  () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
 
-                            children: [
-                              Icon(
-                                Icons.logout_outlined,
-                                color: Color(0xFF737784),
-                                size: 30.0,
-                              ),
-                              const SizedBox(
-                                width: 15.0,
-                              ),
-                              Text(
-                                'Logout',
-                                style: TextStyle(
-                                    color: Color(0xFF737784),
-                                    fontSize: 18.0,
-                                    fontFamily: 'Mazzart',
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+                          children: [
+                            Icon(
+                              Icons.logout_outlined,
+                              color: Color(0xFF737784),
+                              size: 30.0,
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Text(
+                              'Logout',
+                              style: TextStyle(
+                                  color: Color(0xFF737784),
+                                  fontSize: 18.0,
+                                  fontFamily: 'Mazzart',
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );

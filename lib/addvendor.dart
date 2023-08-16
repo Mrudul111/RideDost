@@ -29,7 +29,7 @@ class _AddVendorState extends State<AddVendor> {
         key: _key,
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.only(left: 15,top: 10),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -45,304 +45,334 @@ class _AddVendorState extends State<AddVendor> {
                 SizedBox(height: 20,),
 
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      "Company Details",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                        fontFamily: "DM Sans",
-                        color: Color(0xff0f172a),
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                    Container(
-                      width: 309,
-                      height: 46.3,
-                      child: TextFormField(
-
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter this field';
-                          }
-                          return null;
-                        },
-
-                        onSaved: (newValue) {},
-                        style: const TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: InputDecoration(
-                            fillColor: Color(0xfff5f8fb),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            hintText: "Company Name",
-                            hintStyle: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              color: Color(0xff64748b),
-                            )),
-                      ),
-                    ),
-                    SizedBox(height: 30,),
-                    Text(
-                      "Company Logo",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                        fontFamily: "DM Sans",
-                        color: Color(0xff0f172a),
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                    Container(
-                      width: 309,
-                      height: 46.3,
-                      child: GestureDetector(
-                        onTap: () async{
-                          final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-                          if (pickedImage != null) {
-                          }
-
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xfff5f8fb),
-                            border: Border.all(
-                              color: Color(0xffcbd5e1)
-                            ),
-                            borderRadius: BorderRadius.circular(10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Company Details",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            fontFamily: "DM Sans",
+                            color: Color(0xff0f172a),
                           ),
-                          child: Row(
+                        ),
+                        SizedBox(height: 10,),
+                        Container(
+                          width: 309,
+                          height: 70,
+                          child: TextFormField(
 
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter this field';
+                              }
+                              return null;
+                            },
 
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(
-                                  "Choose file",
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15,
-                                    color: Color(0xff64748b),
-                                  ),
+                            onSaved: (newValue) {},
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
+
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: InputDecoration(
+                                fillColor: Color(0xfff5f8fb),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: Icon(Icons.upload,size: 18, color: Color(0xff5d6b98),),
-                              )
-                            ],
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                hintText: "Company Name",
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
+                                  color: Color(0xff64748b),
+                                )),
                           ),
-                        )
-                      ),
-                    ),
-                    SizedBox(height: 30,),
-                    Text(
-                      "Coupon Value",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                        fontFamily: "DM Sans",
-                        color: Color(0xff0f172a),
-                      ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 10,),
-                    Container(
-                      width: 309,
-                      height: 46.3,
-                      child: TextFormField(
-
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter this field';
-                          }
-                          return null;
-                        },
-
-                        onSaved: (newValue) {},
-                        style: const TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Company Logo",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            fontFamily: "DM Sans",
+                            color: Color(0xff0f172a),
+                          ),
                         ),
+                        SizedBox(height: 10,),
+                        Container(
+                          width: 309,
+                          height: 70,
+                          child: GestureDetector(
+                            onTap: () async{
+                              final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+                              if (pickedImage != null) {
+                              }
 
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: InputDecoration(
-                            fillColor: Color(0xfff5f8fb),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            hintText: "Coupon Value",
-                            hintStyle: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              color: Color(0xff64748b),
-                            )),
-                      ),
-                    ),
-                    SizedBox(height: 30,),
-                    Text(
-                      "Coupon Threshold",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                        fontFamily: "DM Sans",
-                        color: Color(0xff0f172a),
-                      ),
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xfff5f8fb),
+                                border: Border.all(
+                                  color: Color(0xffcbd5e1)
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(
+                                      "Choose file",
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        color: Color(0xff64748b),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Icon(Icons.upload,size: 18, color: Color(0xff5d6b98),),
+                                  )
+                                ],
+                              ),
+                            )
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 10,),
-                    Container(
-                      width: 309,
-                      height: 46.3,
-                      child: TextFormField(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
 
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter this field';
-                          }
-                          return null;
-                        },
-
-                        onSaved: (newValue) {},
-                        style: const TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
+                      children: [
+                        Text(
+                          "Coupon Value",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            fontFamily: "DM Sans",
+                            color: Color(0xff0f172a),
+                          ),
                         ),
+                        SizedBox(height: 10,),
+                        Container(
+                          width: 309,
+                          height: 70,
+                          child: TextFormField(
 
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: InputDecoration(
-                            fillColor: Color(0xfff5f8fb),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            hintText: "Coupon Threshold",
-                            hintStyle: TextStyle(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter this field';
+                              }
+                              return null;
+                            },
+
+                            onSaved: (newValue) {},
+                            style: const TextStyle(
                               fontFamily: 'Poppins',
+                              fontSize: 12,
+                              color: Colors.black,
                               fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              color: Color(0xff64748b),
-                            )),
-                      ),
-                    ),
-                    SizedBox(height: 30,),
-                    Text(
-                      "Address",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                        fontFamily: "DM Sans",
-                        color: Color(0xff0f172a),
-                      ),
+                            ),
+
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: InputDecoration(
+                                fillColor: Color(0xfff5f8fb),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                hintText: "Coupon Value",
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
+                                  color: Color(0xff64748b),
+                                )),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 10,),
-                    Container(
-                      width: 309,
-                      height: 86,
-                      child: TextFormField(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
 
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter this field';
-                          }
-                          return null;
-                        },
-
-                        onSaved: (newValue) {},
-                        style: const TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
+                      children: [
+                        Text(
+                          "Coupon Threshold",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            fontFamily: "DM Sans",
+                            color: Color(0xff0f172a),
+                          ),
                         ),
+                        SizedBox(height: 10,),
+                        Container(
+                          width: 309,
+                          height: 70,
+                          child: TextFormField(
 
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: InputDecoration(
-                            fillColor: Color(0xfff5f8fb),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  width: 0.9, color: Color(0xffcbd5e1)),
-                            ),
-                            hintText: "Address",
-                            hintStyle: TextStyle(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter this field';
+                              }
+                              return null;
+                            },
+
+                            onSaved: (newValue) {},
+                            style: const TextStyle(
                               fontFamily: 'Poppins',
+                              fontSize: 12,
+                              color: Colors.black,
                               fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              color: Color(0xff64748b),
-                            )),
-                      ),
+                            ),
+
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: InputDecoration(
+                                fillColor: Color(0xfff5f8fb),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                hintText: "Coupon Threshold",
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
+                                  color: Color(0xff64748b),
+                                )),
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 30,),
+                    SizedBox(height: 10,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: [
+                        Text(
+                          "Address",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            fontFamily: "DM Sans",
+                            color: Color(0xff0f172a),
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Container(
+                          width: 309,
+                          height: 86,
+                          child: TextFormField(
+
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter this field';
+                              }
+                              return null;
+                            },
+
+                            onSaved: (newValue) {},
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
+
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: InputDecoration(
+                                fillColor: Color(0xfff5f8fb),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      width: 0.9, color: Color(0xffcbd5e1)),
+                                ),
+                                hintText: "Address",
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
+                                  color: Color(0xff64748b),
+                                )),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10,),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GestureDetector(
                           onTap: (){

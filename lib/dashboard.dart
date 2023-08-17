@@ -478,6 +478,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         itemBuilder: (context, index) {
                           final vendor = vendorDetails['vendors']?[index];
                           return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 8.0),
                             decoration: BoxDecoration(
                               color: Color(0XFFFFFFFF),
                               borderRadius: BorderRadius.circular(15.0),

@@ -69,199 +69,205 @@ class _VendorListState extends State<VendorList> {
       ),
       body:  SafeArea(
         child: Container(
-          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+          padding: const EdgeInsets.only(top: 20, left: 20, right: 20,bottom: 20),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            is1Active = true;
-                            is2Active = false;
-                          });
-                        },
-                        child: Container(
-                          height: 31,
-                          width: 48,
-                          decoration: BoxDecoration(
-                            color: is1Active ? Color(0xff2c2c2c) : Colors.white,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "All",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                color: is1Active? Colors.white:Color(0xff828282)
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                is1Active = true;
+                                is2Active = false;
+                              });
+                            },
+                            child: Container(
+                              height: 31,
+                              width: 48,
+                              decoration: BoxDecoration(
+                                color: is1Active ? Color(0xff2c2c2c) : Colors.white,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "All",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                    color: is1Active? Colors.white:Color(0xff828282)
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            is1Active = false;
-                            is2Active = true;
-                          });
-                        },
-                        child: Container(
-                          height: 31,
-                          width: 97,
-                          decoration: BoxDecoration(
-                              color:
-                                  is2Active ? Color(0xff2c2c2c) : Colors.white,
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Center(
-                            child: Text(
-                              "New Vendor",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: is2Active? Colors.white: Color(0xff828282)
+                          SizedBox(
+                            width: 5,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                is1Active = false;
+                                is2Active = true;
+                              });
+                            },
+                            child: Container(
+                              height: 31,
+                              width: 97,
+                              decoration: BoxDecoration(
+                                  color:
+                                      is2Active ? Color(0xff2c2c2c) : Colors.white,
+                                  borderRadius: BorderRadius.circular(100)),
+                              child: Center(
+                                child: Text(
+                                  "New Vendor",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      color: is2Active? Colors.white: Color(0xff828282)
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
+                      GestureDetector(
+                        child: Icon(Icons.filter_list_alt),
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(34), topRight: Radius.circular(34))),
+                              builder: (context) {
+                                return filterPopUp(activeFilter: activeFilter,);
+                              });
+                        },
+                      )
                     ],
                   ),
-                  GestureDetector(
-                    child: Icon(Icons.filter_list_alt),
-                    onTap: () {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return filterPopUp(activeFilter: activeFilter,);
-                          });
-                    },
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              ValueListenableBuilder<String>(
-                valueListenable: activeFilter,
-                builder: (context,filter,child) {
-                  if(filter=="New Vendor"){
-                    return SizedBox(
-                      height: 348,
-                      width: 375,
-                      child: ListView.separated(
-                        scrollDirection: Axis.vertical,
-                        separatorBuilder: (context, index) => SizedBox(height: 16.0),
-                        shrinkWrap: true,
-                        itemCount: 4,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          final vendors = vendorDetails['vendors'] as List<dynamic>?;
-                          if (vendors != null && index < vendors.length) {
-                            final vendor = vendors[index];
-                            return Container(
-                              height: 77,
-                              width: 327,
-                              decoration: BoxDecoration(
-                                color: Color(0XFFFFFFFF),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
+                  SizedBox(
+                    height: 40,
+                  ),
+                  ValueListenableBuilder<String>(
+                    valueListenable: activeFilter,
+                    builder: (context,filter,child) {
+                      if(filter=="New Vendor"){
+                        return SizedBox(
+                          height: 348,
+                          width: 375,
+                          child: ListView.separated(
+                            scrollDirection: Axis.vertical,
+                            separatorBuilder: (context, index) => SizedBox(height: 16.0),
+                            shrinkWrap: true,
+                            itemCount: 4,
+                            physics: AlwaysScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              final vendors = vendorDetails['vendors'] as List<dynamic>?;
+                              if (vendors != null && index < vendors.length) {
+                                final vendor = vendors[index];
+                                return Container(
+                                  height: 77,
+                                  width: 327,
+                                  decoration: BoxDecoration(
+                                    color: Color(0XFFFFFFFF),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage: NetworkImage(
-                                            "https://upload.wikimedia.org/wikipedia/en/3/34/Jimmy_McGill_BCS_S3.png"),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      Row(
                                         children: [
                                           SizedBox(
                                             width: 5,
                                           ),
-                                          Text(
-                                            vendor['name'],
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontFamily: 'DM Sans',
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black,
-                                            ),
+                                          CircleAvatar(
+                                            radius: 30,
+                                            backgroundImage: NetworkImage(
+                                                "https://upload.wikimedia.org/wikipedia/en/3/34/Jimmy_McGill_BCS_S3.png"),
                                           ),
-                                          Text(
-                                            "view all",
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontFamily: 'DM Sans',
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xff008ce4),
-                                              decoration: TextDecoration.underline,
-                                            ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                vendor['name'],
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontFamily: 'DM Sans',
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              Text(
+                                                "view all",
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontFamily: 'DM Sans',
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xff008ce4),
+                                                  decoration: TextDecoration.underline,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.check),
+                                          SizedBox(
+                                            width: 10, // Space between icons
+                                          ),
+                                          Icon(Icons.cancel_rounded)
+                                        ],
+                                      )
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.check),
-                                      SizedBox(
-                                        width: 10, // Space between icons
-                                      ),
-                                      Icon(Icons.cancel_rounded)
-                                    ],
-                                  )
-                                ],
-                              ),
-                            );
-                          } else {
-                            return CircularProgressIndicator();
-                          }
-                        },
-                      ),
+                                );
+                              } else {
+                                return CircularProgressIndicator();
+                              }
+                            },
+                          ),
 
-                    );
-                  }
-                  else if(filter=="Approved Vendor"){
-                    return SizedBox(
-                      height: 348,
-                      width: 375,
-                      child: ListView.separated(
-                        scrollDirection: Axis.vertical,
-                        separatorBuilder: (context, index) => SizedBox(height: 16.0),
-                        shrinkWrap: true,
-                        itemCount: 4,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return VendorListItem();
-                        },
-                      ),
-                    );
-                  }
-                  else{
-                    return Container();
-                  }
-                }
-              ),
-              SizedBox(
-                height: 40,
+                        );
+                      }
+                      else if(filter=="Approved Vendor"){
+                        return SizedBox(
+                          height: 348,
+                          width: 375,
+                          child: ListView.separated(
+                            scrollDirection: Axis.vertical,
+                            separatorBuilder: (context, index) => SizedBox(height: 16.0),
+                            shrinkWrap: true,
+                            itemCount: 4,
+                            physics: AlwaysScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return VendorListItem();
+                            },
+                          ),
+                        );
+                      }
+                      else{
+                        return Container();
+                      }
+                    }
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                ],
               ),
               Align(
                   alignment: Alignment.centerRight,
@@ -269,6 +275,7 @@ class _VendorListState extends State<VendorList> {
                     onPressed: () {
                       showModalBottomSheet(
                           context: context,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(34), topRight: Radius.circular(34))),
                           builder: (context) {
                             return floatingButtonPopUp();
                           });
@@ -437,7 +444,7 @@ class _filterPopUpState extends State<filterPopUp> {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         height: 400,
         decoration: BoxDecoration(
-            color: Color(0xfff2f2f2), borderRadius: BorderRadius.circular(15)),
+            color: Color(0xfff2f2f2), borderRadius: BorderRadius.only(topLeft: Radius.circular(34), topRight: Radius.circular(34))),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -639,7 +646,7 @@ class _filterPopUpState extends State<filterPopUp> {
                               fontFamily: "DM Sans",
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xff3c3c3c)),
+                              color: Colors.white),
                         ),
                       ),
                     ),
@@ -664,115 +671,111 @@ class floatingButtonPopUp extends StatefulWidget {
 class _floatingButtonPopUpState extends State<floatingButtonPopUp> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-        height: MediaQuery.of(context).size.height * 0.35,
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: 6,
-                width: 60,
-                decoration: BoxDecoration(
-                    color: Color(0xffdfe2be),
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                height: 4,
-                width: MediaQuery.of(context).size.width * 0.2,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Color(0xffeff7ff)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0))),
-                    padding: MaterialStateProperty.all(
-                        const EdgeInsets.symmetric(horizontal: 15)),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AddVendor()));
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.person_add_alt_1_outlined,
-                        color: Color(0xff3574f2),
-                        size: 27,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Add Vendor',
-                        style: TextStyle(
-                            fontFamily: 'DM Sans',
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff3574f2),
-                            fontSize: 16.0),
-                      ),
-                    ],
-                  )),
-              const SizedBox(
-                height: 15,
-              ),
-              TextButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Color(0xffeff7ff)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0))),
-                    padding: MaterialStateProperty.all(
-                        const EdgeInsets.symmetric(horizontal: 15)),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>productListing()));
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.file_upload_outlined,
-                        color: Color(0xff3574f2),
-                        size: 27,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Product Listing',
-                        style: TextStyle(
-                            fontFamily: 'DM Sans',
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff3574f2),
-                            fontSize: 16.0),
-                      ),
-                    ],
-                  )),
-              const SizedBox(
-                height: 15,
-              ),
-            ],
-          ),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+      height: MediaQuery.of(context).size.height * 0.35,
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(34), topRight: Radius.circular(34))),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: 6,
+              width: 60,
+              decoration: BoxDecoration(
+                  color: Color(0xffdfe2be),
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              height: 4,
+              width: MediaQuery.of(context).size.width * 0.2,
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Color(0xffeff7ff)),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0))),
+                  padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 15)),
+                ),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AddVendor()));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.person_add_alt_1_outlined,
+                      color: Color(0xff3574f2),
+                      size: 27,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Add Vendor',
+                      style: TextStyle(
+                          fontFamily: 'DM Sans',
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff3574f2),
+                          fontSize: 16.0),
+                    ),
+                  ],
+                )),
+            const SizedBox(
+              height: 15,
+            ),
+            TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Color(0xffeff7ff)),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0))),
+                  padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 15)),
+                ),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>productListing()));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.file_upload_outlined,
+                      color: Color(0xff3574f2),
+                      size: 27,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Product Listing',
+                      style: TextStyle(
+                          fontFamily: 'DM Sans',
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff3574f2),
+                          fontSize: 16.0),
+                    ),
+                  ],
+                )),
+            const SizedBox(
+              height: 15,
+            ),
+          ],
         ),
       ),
     );

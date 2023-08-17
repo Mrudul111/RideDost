@@ -130,7 +130,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Text(
                               'Dashboard',
                               style: TextStyle(
-                                  color:  currentRoute=='/dashboard'? Colors.black : Color(0xFF737784),
+                                  color:  currentRoute=='/dashboard'? Colors.white : Color(0xFF737784),
                                   fontSize: 18.0,
                                   fontFamily: 'Mazzart',
                                   fontWeight: FontWeight.w500),
@@ -483,7 +483,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               borderRadius: BorderRadius.circular(15.0),
                             ),
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -524,7 +524,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   color: Color(0xffa3aed0),
                                                 ),
                                               ),
-                                              SizedBox(width: 10),
+                                              SizedBox(width: 5,),
+                                              Container(
+                                                width: 2,             // Adjust the width of the vertical line
+                                                height: 12,           // Adjust the height of the vertical line
+                                                color: Color(0xffa3aed0),  // Set the color of the vertical line
+                                              ),
+                                              SizedBox(width: 5),
                                               Container(
                                                 width: 76,
                                                 child: Row(
@@ -572,7 +578,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 Center(
                   child: DotsIndicator(
-                    dotsCount: vendorDetails['vendors']?.length,
+                    dotsCount: vendorDetails['vendors']?.length??1,
                     position: currentPage,
                     decorator: DotsDecorator(
                       size: const Size.square(9.0),
@@ -580,7 +586,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                 ),
-                  SizedBox(height: 20,),
+                  SizedBox(height: 40,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -634,7 +640,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             color: Color(0XFFFFFFFF),
                           ),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
                                 width: 5.28,
@@ -671,7 +677,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ),
                               Text(
-                                coupon['point'],
+                                coupon['point'] + " pts",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'DM Sans',

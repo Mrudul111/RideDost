@@ -121,7 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           children: [
                             Icon(
                               Icons.dashboard,
-                              color:  currentRoute=='/dashboard'? Colors.black : Color(0xFF737784),
+                              color:  currentRoute=='/dashboard'? Colors.white : Color(0xFF737784),
                               size: 30.0,
                             ),
                             const SizedBox(

@@ -24,7 +24,7 @@ class _homePageState extends State<homePage> {
               flex:30,
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
                   color: Color(0xFF3574F2),
                 ),
                 width: double.infinity,
@@ -53,8 +53,8 @@ class _homePageState extends State<homePage> {
                           decoration: BoxDecoration(
 
                             image: DecorationImage(
-                              image: AssetImage('assets/images/logoScreen2.png'),
-                              fit: BoxFit.cover,
+                              image: AssetImage('assets/images/Home.png'),
+                              fit: BoxFit.fitHeight,
 
                             ),
                           ),

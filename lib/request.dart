@@ -421,7 +421,7 @@ class _RequestPageState extends State<RequestPage> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: (){
-                                showModalBottomSheet(context: context, builder: (context){return Padding(
+                                showModalBottomSheet(context: context,shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(34), topRight: Radius.circular(34))), builder: (context){return Padding(
                                   padding:
                                   EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                                   child: Container(
@@ -431,7 +431,7 @@ class _RequestPageState extends State<RequestPage> {
                                     decoration: const BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                                            topLeft: Radius.circular(34), topRight: Radius.circular(45))),
                                     child: Column(
                                       children: [
                                         SizedBox(height: 20,),
@@ -634,13 +634,12 @@ class _RequestPageState extends State<RequestPage> {
                         ),
                       ),
                     ),
-                  ):SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Padding(
-                      padding: EdgeInsets.all(screenWidth * 0.02),
+                  ):Container(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
                       child: Container(
                         width: screenWidth * 0.9,
-                        height: screenHeight * 0.45,
+                        height: screenHeight * 0.5,
                         child: ListView.separated(
                           separatorBuilder: (context, index) =>
                               SizedBox(height: 10.0),
@@ -650,7 +649,7 @@ class _RequestPageState extends State<RequestPage> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: (){
-                                showModalBottomSheet(context: context, builder: (context){return Padding(
+                                showModalBottomSheet(context: context,shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(34), topRight: Radius.circular(34))), builder: (context){return Padding(
                                   padding:
                                   EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                                   child: Container(
@@ -660,7 +659,7 @@ class _RequestPageState extends State<RequestPage> {
                                     decoration: const BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                                            topLeft: Radius.circular(34), topRight: Radius.circular(34))),
                                     child: Column(
                                       children: [
                                         SizedBox(height: 20,),

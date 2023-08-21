@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -375,31 +376,27 @@ class _CouponState extends State<Coupon> {
                                                         SizedBox(
                                                           height: 50,
                                                         ),
-                                                        Container(
-                                                          width: 297,
-                                                          height: 50.13,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                              color: Color(
-                                                                  0xff150b3d),
-                                                              width:
-                                                                  2.0, // Adjust the border width as needed
-                                                            ),
-                                                          ),
-                                                          child: Center(
-                                                            child: Text(
-                                                              coupon[
-                                                                  'couponCode'],
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    "SF Pro Display",
-                                                                color: Color(
-                                                                    0xff150b3d),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                fontSize: 22.7,
+                                                        DottedBorder(
+                                                          color: Color(0xff737784),//color of dotted/dash line
+                                                          strokeWidth: 3, //thickness of dash/dots
+                                                          dashPattern: [10,6],
+                                                          child: Container(
+                                                            width: 297,
+                                                            height: 50.13,
+                                                            child: Center(
+                                                              child: Text(
+                                                                coupon[
+                                                                    'couponCode'],
+                                                                style: TextStyle(
+                                                                  fontFamily:
+                                                                      "SF Pro Display",
+                                                                  color: Color(
+                                                                      0xff150b3d),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  fontSize: 22.7,
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
@@ -495,13 +492,6 @@ class _CouponState extends State<Coupon> {
                                                                 BoxDecoration(
                                                               color: Color(
                                                                   0xff3574f2),
-                                                              borderRadius: BorderRadius.only(
-                                                                  topLeft: Radius
-                                                                      .circular(
-                                                                          34),
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          34)),
                                                             ),
                                                             child: Center(
                                                               child: Text(

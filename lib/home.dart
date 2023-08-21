@@ -17,114 +17,109 @@ class _homePageState extends State<homePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(
-              flex:30,
-              child: Container(
+      body: Padding(
+        padding: const EdgeInsets.only(top: 16),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 216.8,
+                height: 131,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
-                  color: Color(0xFF3574F2),
-                ),
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    SizedBox(height: 50),
-                    Center(
-                      child: Container(
-                        width: 150,
-                        height: 50.49,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/logo.png'),
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    Expanded(
-                      child: Center(
-                        child: Container(
-
-                          width: 263.09,
-                          height: 392.70,
-                          decoration: BoxDecoration(
-
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/Home.png'),
-                              fit: BoxFit.fitHeight,
-
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 15,
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/Asset 6 1.png'),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 50.0,
-                    ),
-                    Center(
-                      child: const Text(
-
-                        'Now payments are\n "Smarter" than you think',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFF474A56),
-                          fontSize: 18,
-                          fontFamily: "Mazzart"
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 60.0,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50.0,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF3574F2),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/login');
-                        },
-                        child:  Text(
-                          "Sign up",
-                          style: TextStyle(
-                            fontFamily: "Mazzart",
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
-            ),
-          ],
+              Column(
+                children: [
+                  Center(
+                    child: Text(
+                      "Explore the app",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: "DM Sans",
+                          fontSize: 32,
+                          fontWeight: FontWeight.w700
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: const Text(
+
+                      'Now your finances are in one place and always under control',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF474A56),
+                        fontSize: 18,
+                        fontFamily: "DM Sans",
+                        fontWeight: FontWeight.w400,
+
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  SizedBox(
+                    width: 353,
+                    height: 56.0,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF3574F2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      child:  Text(
+                        "Sign in",
+                        style: TextStyle(
+                          fontFamily: "Mazzart",
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  SizedBox(
+                    width: 353,
+                    height: 56.0,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFFFFFFFF),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                            side: BorderSide(color: Color(0xff3574f2))
+                        ),
+
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/newaccount');
+                      },
+                      child:  Text(
+                        "Create Account",
+                        style: TextStyle(
+                          fontFamily: "Mazzart",
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff3574f2),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

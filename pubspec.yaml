@@ -41,6 +41,7 @@ dependencies:
   dots_indicator: ^3.0.0
   image_picker: ^1.0.2
   qr_flutter: ^4.1.0
+  dotted_border: ^2.0.0+3
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,10 @@ flutter:
     - assets/images/icon.png
     - assets/images/dropdown.png
     - assets/images/Frame 162397.png
+    - assets/images/Asset 6 1.png
+    - assets/images/Home-2.png
+    - assets/images/device.png
+    - assets/images/device@2x.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

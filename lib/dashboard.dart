@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api/adminApi.dart';
@@ -430,7 +431,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Container(
                     height: 365,
                     width: 327,
-                    color: Colors.blue,
+                    child: LineChartSample2(),
                   ),
                   SizedBox(height: 20,),
                   Row(
@@ -474,9 +475,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       height: 85   ,
                       child: PageView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: vendorDetails['vendors']?.length ?? 0,
+                        itemCount: 4,
                         itemBuilder: (context, index) {
-                          final vendor = vendorDetails['vendors']?[index];
+                          final vendors = vendorDetails['vendors'] as List<dynamic>?;
+                        if (vendors != null && index < vendors.length) {
+                          final vendor = vendors[index];
                           return Container(
                             margin: EdgeInsets.symmetric(horizontal: 8.0),
                             decoration: BoxDecoration(
@@ -487,17 +490,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
                                   child: Row(
                                     children: [
                                       CircleAvatar(
                                         radius: 35,
-                                        backgroundImage: const NetworkImage("https://upload.wikimedia.org/wikipedia/en/3/34/Jimmy_McGill_BCS_S3.png"),
+                                        backgroundImage: const NetworkImage(
+                                            "https://upload.wikimedia.org/wikipedia/en/3/34/Jimmy_McGill_BCS_S3.png"),
                                       ),
                                       SizedBox(width: 10),
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .start,
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .spaceEvenly,
                                         children: [
                                           Text(
                                             vendor['name'],
@@ -527,9 +534,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               ),
                                               SizedBox(width: 5,),
                                               Container(
-                                                width: 2,             // Adjust the width of the vertical line
-                                                height: 12,           // Adjust the height of the vertical line
-                                                color: Color(0xffa3aed0),  // Set the color of the vertical line
+                                                width: 2,
+                                                // Adjust the width of the vertical line
+                                                height: 12,
+                                                // Adjust the height of the vertical line
+                                                color: Color(
+                                                    0xffa3aed0), // Set the color of the vertical line
                                               ),
                                               SizedBox(width: 5),
                                               Container(
@@ -537,7 +547,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 child: Row(
                                                   children: [
                                                     Icon(
-                                                      Icons.mail_outline_rounded,
+                                                      Icons
+                                                          .mail_outline_rounded,
                                                       size: 12,
                                                       color: Color(0xffa3aed0),
                                                     ),
@@ -545,12 +556,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                     Expanded(
                                                       child: Text(
                                                         vendor['email'],
-                                                        overflow: TextOverflow.ellipsis,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         style: TextStyle(
                                                           fontFamily: 'DM Sans',
                                                           fontSize: 12,
-                                                          fontWeight: FontWeight.w400,
-                                                          color: Color(0xffa3aed0),
+                                                          fontWeight: FontWeight
+                                                              .w400,
+                                                          color: Color(
+                                                              0xffa3aed0),
                                                         ),
                                                       ),
                                                     ),
@@ -568,6 +582,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ],
                             ),
                           );
+                        }
                         },
                         onPageChanged: (index) {
                           // Update the current page index when the page changes
@@ -579,7 +594,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 Center(
                   child: DotsIndicator(
-                    dotsCount: vendorDetails['vendors']?.length??1,
+                    dotsCount: 4,
                     position: currentPage,
                     decorator: DotsDecorator(
                       size: const Size.square(9.0),
@@ -599,6 +614,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           fontSize: 20,
                         ),
                       ),
+
                       GestureDetector(
                         onTap: (){
                           Navigator.pushNamed(context, '/coupon');
@@ -623,7 +639,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       )
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 20,),
                   SizedBox(
                     width: 351,
                     height: 357.31  ,
@@ -645,7 +661,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             children: [
                               Container(
                                 width: 5.28,
-                                height: 54.09,
+                                height: 70.09,
                                 decoration: BoxDecoration(
                                   color: Color(0XFF3574F2),
                                   borderRadius: BorderRadius.circular(21.0),
@@ -747,4 +763,229 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     );
   }
+}
+
+class LineChartSample2 extends StatefulWidget {
+  const LineChartSample2({super.key});
+
+  @override
+  State<LineChartSample2> createState() => _LineChartSample2State();
+}
+
+class _LineChartSample2State extends State<LineChartSample2> {
+  List<Color> gradientColors = [
+    Color(0xff1d3cab),
+    Color(0xff2f35b9)
+  ];
+
+  bool showAvg = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(height: 30,),
+            Center(
+              child: Text(
+                "Total Points Earned",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontFamily: "DM Sans",
+                  fontSize: 14,
+                  color: Color(0xff6b7280),
+                ),
+              ),
+            ),
+            SizedBox(height: 10,),
+            Center(
+              child: Text(
+                "5,215",
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontFamily: "DM Sans",
+                  fontSize: 24,
+                  color: Color(0xff1d3a70),
+                ),
+              ),
+            ),
+            Row(
+
+            )
+          ],
+        ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(
+              color: Colors.grey
+            )
+          ),
+          child: LineChart(
+            mainData(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 2:
+        text = const Text('S', style: style);
+        break;
+      case 5:
+        text = const Text('M', style: style);
+        break;
+      case 8:
+        text = const Text('T', style: style);
+        break;
+      case 11:
+        text = const Text('W', style: style);
+        break;
+      case 14:
+        text = const Text('T', style: style);
+        break;
+      case 17:
+        text = const Text('F', style: style);
+        break;
+      case 20:
+        text = const Text('S', style: style);
+        break;
+      default:
+        text = const Text('', style: style);
+        break;
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
+    );
+  }
+
+
+  LineChartData mainData() {
+    final Map<int, String> indexToDayMap = {
+      0: "S",
+      1: "M",
+      2: "T",
+      3: "W",
+      4: "T",
+      5: "F",
+      6: "S",
+    };
+    List<int> xValues = indexToDayMap.keys.toList();
+    List<double> yValues = [0, 4, 6, 2, 4, 3, 5];
+    List<FlSpot> spots = xValues.map((index) {
+      double x = index.toDouble();
+      double y = yValues[index];
+      return FlSpot(x, y);
+    }).toList();
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+
+        getDrawingHorizontalLine: (value) {
+          return const FlLine(
+            color: AppColors.mainGridLineColor,
+            strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return const FlLine(
+            color: AppColors.mainGridLineColor,
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            interval: 1,
+            getTitlesWidget: bottomTitleWidgets,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: false,
+            interval: 1,
+            reservedSize: 42,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: false,
+        border: Border.all(color: const Color(0xff37434d)),
+      ),
+      minX: -0.5,
+      maxX: 22,
+      minY: 0,
+      maxY: 10,
+      lineBarsData: [
+        LineChartBarData(
+          spots: spots,
+          isCurved: true,
+          color: Color(0xff1d3a70),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: [
+                Color(0xff1d3cab).withOpacity(1.0),
+                Color(0xff2f35b9).withOpacity(0),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+class AppColors {
+  static const Color primary = contentColorCyan;
+  static const Color menuBackground = Color(0xFF090912);
+  static const Color itemsBackground = Color(0xFF1B2339);
+  static const Color pageBackground = Color(0xFF282E45);
+  static const Color mainTextColor1 = Colors.white;
+  static const Color mainTextColor2 = Colors.white70;
+  static const Color mainTextColor3 = Colors.white38;
+  static const Color mainGridLineColor = Colors.white10;
+  static const Color borderColor = Colors.white54;
+  static const Color gridLinesColor = Color(0x11FFFFFF);
+
+  static const Color contentColorBlack = Colors.black;
+  static const Color contentColorWhite = Colors.white;
+  static const Color contentColorBlue = Color(0xFF2196F3);
+  static const Color contentColorYellow = Color(0xFFFFC300);
+  static const Color contentColorOrange = Color(0xFFFF683B);
+  static const Color contentColorGreen = Color(0xFF3BFF49);
+  static const Color contentColorPurple = Color(0xFF6E1BFF);
+  static const Color contentColorPink = Color(0xFFFF3AF2);
+  static const Color contentColorRed = Color(0xFFE80054);
+  static const Color contentColorCyan = Color(0xFF50E4FF);
 }

@@ -16,10 +16,7 @@ class _createAccountState extends State<createAccount> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox(
-              height: 20,
-            ),
-            Image(image: AssetImage('assets/images/Home-2.png'),),
+            Image.asset("assets/images/Home-2.png", fit: BoxFit.contain),
             SizedBox(
               height: 20,
             ),
@@ -54,7 +51,7 @@ class _createAccountState extends State<createAccount> {
               ],
             ),
             SizedBox(
-              height: 20,
+              height: 15,
             ),
             Column(
               children: [
@@ -134,13 +131,44 @@ class _newAccountState extends State<newAccount> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 30,),
-            Container(width:230.05,height:231,child: Image(image: AssetImage('assets/images/device.png'),fit: BoxFit.cover
-              ,)),
+            SizedBox(
+              height: 30,
+            ),
+            Image.asset("assets/images/createAcc.png"),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Center(
+                      child: Text(
+                        "Finance app ",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: "SF Pro Display",
+                          color: Color(0xff3866f2),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        "the safest and most ",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: "SF Pro Display",
+                          color: Color(0xff1d3a70),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            )
           ],
         ),
       ),
     );
   }
 }
-

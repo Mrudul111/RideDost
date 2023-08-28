@@ -223,14 +223,17 @@ class _VendorListState extends State<VendorList> {
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.check),
-                                          SizedBox(
-                                            width: 10, // Space between icons
-                                          ),
-                                          Icon(Icons.cancel_rounded)
-                                        ],
+                                      Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.check),
+                                            SizedBox(
+                                              width: 10, // Space between icons
+                                            ),
+                                            Icon(Icons.cancel_rounded)
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),

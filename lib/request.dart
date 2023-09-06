@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'Global/colors.dart';
+import 'api/jsonAPI.dart';
+import 'dashboard.dart';
+import 'list.dart';
+import 'login.dart';
 import 'main.dart';
-
+import 'package:http/http.dart' as http;
+Map<String, dynamic> details = {};
 class RequestPage extends StatefulWidget {
   const RequestPage({Key? key}) : super(key: key);
 
@@ -17,6 +24,7 @@ class _RequestPageState extends State<RequestPage> {
   @override
   void initState() {
     // TODO: implement initState
+    print(vendorDetails);
     is1Active = true;
     super.initState();
   }
@@ -432,343 +440,57 @@ class _RequestPageState extends State<RequestPage> {
                                   itemCount: 6,
                                   physics: AlwaysScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                            context: context,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(34),
-                                                    topRight:
-                                                        Radius.circular(34))),
-                                            builder: (context) {
-                                              return Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom:
-                                                        MediaQuery.of(context)
-                                                            .viewInsets
-                                                            .bottom),
-                                                child: Container(
-                                                  width: double.infinity,
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      vertical: 20,
-                                                      horizontal: 30),
-                                                  height: 375,
-                                                  decoration: const BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topLeft: Radius
-                                                                  .circular(34),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      45))),
-                                                  child: Column(
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                "REQUEST TO",
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      "DM Sans",
-                                                                  fontSize:
-                                                                      16.58,
-                                                                  color: Color(
-                                                                      0xff737748),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                "Sardars",
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 25,
-                                                                  fontFamily:
-                                                                      "SF Pro Display",
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  color: Color(
-                                                                      0xff150b3d),
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                "used by Gaurav",
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 15,
-                                                                  fontFamily:
-                                                                      "SF Pro Display",
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w300,
-                                                                  color: Color(
-                                                                      0xff737784),
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
-                                                          Container(
-                                                            width: 48,
-                                                            height: 48,
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            6),
-                                                                color: Color(
-                                                                    0xff3574f2)),
-                                                            child: Center(
-                                                              child: Text(
-                                                                "500\nPTS",
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      "SF Pro Display",
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w300,
-                                                                  fontSize: 11,
-                                                                  color: Color(
-                                                                      0xffffffff),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      SizedBox(
-                                                        height: 30,
-                                                      ),
-                                                      DottedBorder(
-                                                        color: Color(0xff737784),//color of dotted/dash line
-                                                        strokeWidth: 3, //thickness of dash/dots
-                                                        dashPattern: [10,6],
-                                                        child: Container(
-                                                          width: 297,
-                                                          height: 50.13,
-                                                          child: Center(
-                                                            child: Text(
-                                                              "YWHJ-4RR7-A25K",
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    "SF Pro Display",
-                                                                color: Color(
-                                                                    0xff150b3d),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                fontSize: 22.7,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .access_time_outlined,
-                                                                color: Color(
-                                                                    0xff737784),
-                                                                size: 13.66,
-                                                              ),
-                                                              Text(
-                                                                "20 days left",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Color(
-                                                                      0xff737784),
-                                                                  fontFamily:
-                                                                      "SF Pro Display",
-                                                                  fontSize:
-                                                                      13.66,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w300,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          SizedBox(width: 10),
-                                                          Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .local_offer_outlined,
-                                                                color: Color(
-                                                                    0xff737784),
-                                                                size: 13.66,
-                                                              ),
-                                                              Text(
-                                                                "1500",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Color(
-                                                                      0xff737784),
-                                                                  fontFamily:
-                                                                      "SF Pro Display",
-                                                                  fontSize:
-                                                                      13.66,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w300,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons.refresh,
-                                                                color: Color(
-                                                                    0xff737784),
-                                                                size: 13.66,
-                                                              ),
-                                                              Text(
-                                                                "$dropdownStatus",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Color(
-                                                                      0xff737784),
-                                                                  fontFamily:
-                                                                      "SF Pro Display",
-                                                                  fontSize:
-                                                                      13.66,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w300,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      SizedBox(
-                                                        height: 40,
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          setState(() {
-                                                            dropdownStatus =
-                                                                "Requested";
-                                                            Navigator.pop(
-                                                                context);
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          width: 327,
-                                                          height: 56,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: dropdownStatus ==
-                                                                    "Pending"
-                                                                ? Color(
-                                                                    0xff3574f2)
-                                                                : Colors.white,
-                                                            border: Border.all(
-                                                                color: Color(
-                                                                    0xff3574f2)),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        30),
-                                                          ),
-                                                          child: Center(
-                                                            child: Text(
-                                                              dropdownStatus ==
-                                                                      "Pending"
-                                                                  ? "Send Request"
-                                                                  : "Go back",
-                                                              style: TextStyle(
-                                                                color: dropdownStatus ==
-                                                                        "Pending"
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Color(
-                                                                        0xff3574f2),
-                                                                fontFamily:
-                                                                    "SF Pro Display",
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: 10),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            "Have any issue?",
-                                                            style: TextStyle(
-                                                              color: Color(
-                                                                  0xff737784),
-                                                              fontFamily:
-                                                                  "SF Pro Display",
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "Contact Us",
-                                                            style: TextStyle(
-                                                              color: Color(
-                                                                  0xff1d3a70),
-                                                              fontFamily:
-                                                                  "SF Pro Display",
-                                                              fontSize: 16.94,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                            ),
-                                                          )
-                                                        ],
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
+                                    final vendors = vendorDetails['vendors'] as List<dynamic>?;
+                                    if (vendors != null && index < vendors.length) {
+                                      final vendor = vendors[index];
+                                      final String id = vendor['_id'];
+                                      return GestureDetector(
+                                        onTap: () {
+
+                                          Future<dynamic> getAllVendorsDetails(String token) async {
+                                            try {
+                                              final response = await http.get(
+                                                Uri.parse('https://fierce-lime-pajamas.cyclic.app/admin/settle/coupon/$id'),
+                                                headers: {
+                                                  'Authorization': 'Bearer $token',
+                                                },
                                               );
-                                            });
-                                      },
-                                      child: buildRequestItem('Vendor Name',
-                                          "vendor id", "21st JUN 2022"),
-                                    );
+                                              return response;
+                                            } catch (error) {
+                                              // print(error);
+                                              print(error);
+                                              return {'status': false};
+                                              // throw error;
+                                            }
+                                          }
+                                          Future<void> fetchVendorsDetails() async {
+                                            try {
+                                              String? token = tkn;
+                                              final response = await getAllVendorsDetails(tkn!);
+
+                                              if (response.statusCode == 200) {
+                                                final responseData = jsonDecode(response.body);
+                                                setState(() {
+                                                  details = responseData; // Initialize the vendorDetails map with the parsed JSON data
+                                                });
+                                                print(details);
+                                                Navigator.push(context, MaterialPageRoute(builder: (context)=>list()));
+
+
+                                              } else {
+                                                print(response.body);
+                                                print("Error fetching vendors. Status code: ${response.statusCode}");
+                                              }
+                                            } catch (error) {
+                                              print("Error fetching vendors: $error");
+                                            }
+                                          }
+                                          fetchVendorsDetails();
+                                        },
+                                        child: buildRequestItem(vendor['name'],
+                                            vendor['_id'], "21st JUN 2022"),
+                                      );
+                                    }
                                   },
                                 ),
                               ),

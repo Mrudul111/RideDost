@@ -15,7 +15,9 @@ import 'api/jsonAPI.dart';
 import 'login.dart';
 import 'main.dart';
 
-
+String? tkn = '';
+Map<String, dynamic> vendorDetails = {}; // Initialize an empty map
+List<dynamic> coupons = []; // Initialize an empty list for coupons
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
 
@@ -25,8 +27,6 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int currentPage = 0;
-  Map<String, dynamic> vendorDetails = {}; // Initialize an empty map
-  List<dynamic> coupons = []; // Initialize an empty list for coupons
 
 
   void initState() {
@@ -37,6 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> fetchCoupons() async {
     try {
       String? token = await Login2(phno);
+      tkn =  token;
       final response = await getAllCoupons(token!);
 
       if (response.statusCode == 200) {
@@ -68,6 +69,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         setState(() {
           vendorDetails = responseData; // Initialize the vendorDetails map with the parsed JSON data
         });
+        print(vendorDetails);
       } else {
         print("Error fetching vendors. Status code: ${response.statusCode}");
       }
@@ -647,7 +649,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       scrollDirection: Axis.vertical,
                       separatorBuilder: (context, index) => SizedBox(height: 16.0),
                       shrinkWrap: true,
-                      itemCount: coupons.length,
+                      itemCount: 4,
                       physics: AlwaysScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         final coupon = coupons[index];

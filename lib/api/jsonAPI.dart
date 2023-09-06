@@ -1,8 +1,9 @@
 import 'dart:convert'; // Import the 'dart:convert' library to handle JSON data
 import 'package:http/http.dart' as http;
+import 'package:token/dashboard.dart';
+import '../login.dart';
 
 final String apiUrl = "https://token-web-backend.el.r.appspot.com"; // Replace with your API URL
-
 Future<String?> Login(String number) async {
   try {
     // Make the POST request
@@ -87,5 +88,53 @@ Future<http.Response> getAllCoupons(String token) async {
     throw error;
   }
 }
+Future<http.Response> sendRequest(String couponCode, String token) async {
+  final baseUrl = 'https://fierce-lime-pajamas.cyclic.app/'; // Replace with your actual base URL
+  final url = Uri.parse('$baseUrl/admin/settle/send/$couponCode');
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print(response.body);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Future<void> handleSendRequest(String couponCode) async {
+//   print(couponCode);
+//
+//   // Replace with your actual base URL
+//   final baseUrl = 'YOUR_BASE_URL_HERE';
+//   final url = Uri.parse('$baseUrl/admin/settle/send/$couponCode');
+//   final token = tkn;
+//
+//   try {
+//     final response = await http.post(
+//       url,
+//       headers: {
+//         'Authorization': 'Bearer $token',
+//       },
+//     );
+//
+//     if (response.statusCode == 200) {
+//       print(response.body);
+//       final Map<String, dynamic> data = jsonDecode(response.body);
+//       final coupons = data['coupons'];
+//
+//       setCoupons(coupons);
+//       fetchVendors();
+//     }
+//   } catch (error) {
+//     print(error);
+//   } finally {
+//     dispatch(setFetching(false));
+//   }
+// }
 
 

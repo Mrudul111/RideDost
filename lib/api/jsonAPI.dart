@@ -2,9 +2,12 @@ import 'dart:convert'; // Import the 'dart:convert' library to handle JSON data
 import 'package:http/http.dart' as http;
 import 'package:token/dashboard.dart';
 import '../login.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 String role = "";
-final String apiUrl = "https://fierce-lime-pajamas.cyclic.app/"; // Replace with your API URL
+Map<String, dynamic> decodedToken = JwtDecoder.decode(tkn!);
+String uid = decodedToken['userId'];
+final String apiUrl = "https://fierce-lime-pajamas.cyclic.app"; // Replace with your API URL
 Future<String?> Login(String number) async {
   try {
     // Make the POST request
@@ -72,22 +75,19 @@ Future<dynamic> getAllVendors(String token) async {
   }
 }
 
-Future<http.Response> getAllCoupons(String token) async {
+Future<http.Response> getAllCoupons(int page,String token) async {
   final String baseUrl = apiUrl;
-
   String url = "";
 
   if(role=='1'){
-    url = 'https://fierce-lime-pajamas.cyclic.app/admin/coupons/admincoupon';
+    url = 'https://fierce-lime-pajamas.cyclic.app/admin/coupons/admincoupon?page=${page}';
   }
   if(role=='2'){
-    url = 'https://fierce-lime-pajamas.cyclic.app/admin/coupons/vendorcoupon';
+    url = 'https://fierce-lime-pajamas.cyclic.app/admin/coupons/vendorcoupon?page=${page}';
   }
   if(role=='3'){
-    url = 'https://fierce-lime-pajamas.cyclic.app/admin/coupons/usercoupon';
+    url = 'https://fierce-lime-pajamas.cyclic.app/admin/coupons/usercoupon?page=${page}';
   }
-  print(role);
-  print(url);
   try {
     final http.Response response = await http.get(
       Uri.parse(url),
@@ -95,7 +95,6 @@ Future<http.Response> getAllCoupons(String token) async {
         'Authorization': 'Bearer $token',
       },
     );
-    print(response.body);
     return response;
   } catch (error) {
     throw error;
@@ -118,8 +117,112 @@ Future<http.Response> sendRequest(String couponCode, String token) async {
     throw error;
   }
 }
-Future<http.Response> approvedList(String token) async {
-  final String url = 'https://fierce-lime-pajamas.cyclic.app/admin/admin/recieved/request';
+Future<http.Response> approvedList(int page,String token) async {
+
+   String url = "";
+
+  if(role=='1'){
+    url = 'https://fierce-lime-pajamas.cyclic.app/admin/admin/recieved/request?page=${page}';
+  }
+  if(role=='2'){
+    url = 'https://fierce-lime-pajamas.cyclic.app/admin/vendor/recieved/request?page=${page}';
+  }
+
+  try {
+    final http.Response response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print(response.body);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+Future<http.Response> acceptRequest(String id, String token) async {// Replace with your base URL
+
+  try {
+    final response = await http.patch(
+      Uri.parse('$apiUrl/admin/vendor/received/request/accept/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json', // Adjust content type if needed
+      },
+      body: jsonEncode(<String, dynamic>{}), // You can pass null or an empty object here
+    );
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+Future<http.Response> forwardRequest(String id, String token) async {
+  final baseUrl = 'https://fierce-lime-pajamas.cyclic.app'; // Replace with your actual base URL
+  final url = Uri.parse('$baseUrl/admin/forward/$id');
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print(response.body);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+Future<http.Response> vendorAcceptRequest(String id, String token) async {// Replace with your base URL
+  final baseUrl = 'https://fierce-lime-pajamas.cyclic.app';
+  print(token);
+  print(id);
+  try {
+    final response = await http.patch(
+      Uri.parse('$baseUrl/admin/vendor/recieved/request/accept/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, dynamic>{}),
+    );
+    print(response.body);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+Future<http.Response> adminReturn(String id, String token) async {// Replace with your base URL
+  final baseUrl = 'https://fierce-lime-pajamas.cyclic.app';
+  try {
+    final response = await http.patch(
+      Uri.parse('$baseUrl/admin/return/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json', // Adjust content type if needed
+      },
+      body: jsonEncode(<String, dynamic>{}), // You can pass null or an empty object here
+    );
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+Future<http.Response> paymentSettlement(int page,String token) async {
+
+  String url = "";
+
+  if(role=='1'){
+    url = 'https://fierce-lime-pajamas.cyclic.app/paymentsettlement/payment-settlements?page=${page}';
+  }
+  if(role=='2'){
+    url = 'https://fierce-lime-pajamas.cyclic.app/paymentsettlement/payment-settlements/vendor?page=${page}';
+  }
 
   try {
     final http.Response response = await http.get(

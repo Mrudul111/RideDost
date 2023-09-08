@@ -20,8 +20,6 @@ class list extends StatefulWidget {
 
 class _listState extends State<list> {
   @override
-  String dropdownStatus = "Pending";
-  @override
   void initState() {
     // TODO: implement initState
 
@@ -465,7 +463,7 @@ class _listState extends State<list> {
                                                         size: 13.66,
                                                       ),
                                                       Text(
-                                                        "$dropdownStatus",
+                                                        firstRequestItem['sendor']['status'],
                                                         style:
                                                         TextStyle(
                                                           color: Color(
@@ -487,24 +485,25 @@ class _listState extends State<list> {
                                                 height: 40,
                                               ),
                                               GestureDetector(
-                                                onTap: () async{
-                                                  await sendRequest(firstRequestItem['coupon']['couponCode'],tkn!);
-                                                  setState(() {
-                                                    if(firstRequestItem['sendor']['status']=='pending') {
-                                                      dropdownStatus =
-                                                      "Requested";
-                                                    }
-                                                    Navigator.pop(
-                                                        context);
-                                                  });
+                                                onTap: () async {
+                                                  if (firstRequestItem['sendor']['status'] == 'pending') {
+                                                    // Update the status in your data source
+                                                    setState(() {
+                                                      firstRequestItem['sendor']['status'] = 'requested';
+                                                    });
+
+                                                    // You may also send a request here if needed.
+                                                     sendRequest(firstRequestItem['coupon']['couponCode'], tkn!);
+                                                  }
+                                                  Navigator.pop(context);
                                                 },
                                                 child: Container(
                                                   width: 327,
                                                   height: 56,
                                                   decoration:
                                                   BoxDecoration(
-                                                    color: dropdownStatus ==
-                                                        "Pending"
+                                                    color: firstRequestItem['sendor']['status'] ==
+                                                        "pending"
                                                         ? Color(
                                                         0xff3574f2)
                                                         : Colors
@@ -519,14 +518,14 @@ class _listState extends State<list> {
                                                   ),
                                                   child: Center(
                                                     child: Text(
-                                                      dropdownStatus ==
-                                                          "Pending"
+                                                      firstRequestItem['sendor']['status'] ==
+                                                          "pending"
                                                           ? "Approve"
                                                           : "Go back",
                                                       style:
                                                       TextStyle(
-                                                        color: dropdownStatus ==
-                                                            "Pending"
+                                                        color: firstRequestItem['sendor']['status'] ==
+                                                            "pending"
                                                             ? Colors
                                                             .white
                                                             : Color(

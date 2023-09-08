@@ -24,7 +24,7 @@ class _CouponState extends State<Coupon> {
   Future<void> fetchCoupons() async {
     try {
       String? token = await Login2(phno);
-      final response = await getAllCoupons(token!);
+      final response = await getAllCoupons(1,token!);
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);

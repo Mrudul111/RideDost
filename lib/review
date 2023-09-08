@@ -1,0 +1,500 @@
+{
+   user.receiver.vendorId === user.superAdmin.adminId &&
+     user.receiver.status !== 'accepted' &&
+     user.sendor.status !== 'accepted' &&
+     user.receiver.status !== 'pending' && (
+       <div className="dropdown">
+         <button
+           className="dropdown-toggle dropdown-pending"
+           type="button"
+           id="dropdownMenuButton1"
+           data-bs-toggle="dropdown"
+           aria-expanded="false"
+         >
+           Pending
+         </button>
+         <ul
+           className="dropdown-menu drop-down"
+           aria-labelledby="dropdownMenuButton1"
+         >
+           <li>
+             <span
+               onClick={() => handleApprove(user._id)}
+               className="dropdown-item dropdown-color-approve"
+             >
+               Approve
+             </span>
+           </li>
+           <div className="dropdown-divider"></div>
+           <li>
+             <span
+               onClick={() => handleReject(user._id)}
+               className="dropdown-item dropdown-color-reject"
+             >
+               Reject
+             </span>
+           </li>
+         </ul>
+       </div>
+     );
+ }
+ {
+   user.receiver.vendorId === user.superAdmin.adminId &&
+     user.receiver.status === 'pending' &&
+     user.sendor.status === 'requested' &&
+     user.superAdmin.status === 'pending' &&
+     role === '1' && (
+       <div className="dropdown">
+         <button
+           className="dropdown-toggle dropdown-pending"
+           type="button"
+           id="dropdownMenuButton1"
+           data-bs-toggle="dropdown"
+           aria-expanded="false"
+         >
+           Pending
+         </button>
+         <ul
+           className="dropdown-menu drop-down"
+           aria-labelledby="dropdownMenuButton1"
+         >
+           <li>
+             <span
+               onClick={() => handleApprove(user._id)}
+               className="dropdown-item dropdown-color-approve"
+             >
+               Approve
+             </span>
+           </li>
+           <div className="dropdown-divider"></div>
+           <li>
+             <span
+               onClick={() => handleReject(user._id)}
+               className="dropdown-item dropdown-color-reject"
+             >
+               Reject
+             </span>
+           </li>
+         </ul>
+       </div>
+     );
+ }
+ {
+   user.receiver.vendorId === user.superAdmin.adminId &&
+     user.receiver.status === 'pending' &&
+     user.sendor.status === 'pending' &&
+     user.superAdmin.status === 'accepted' &&
+     role === '1' && (
+       <span className="dropdown-item dropdown-color-approve">Approved</span>
+     );
+ }
+ {
+   user.receiver.vendorId !== user.superAdmin.adminId &&
+     user.receiver.status === 'accepted' &&
+     user.sendor.status === 'requested' &&
+     user.superAdmin.status === 'requestedback' &&
+     role === '2' &&
+     user.receiver.vendorId === userId && (
+       <span className="dropdown-item dropdown-color-approve">Approved</span>
+     );
+ }
+ {
+   user.receiver.vendorId === user.superAdmin.adminId &&
+     user.receiver.status === 'pending' &&
+     user.sendor.status === 'pending' &&
+     user.superAdmin.status === 'accepted' &&
+     role === '2' && (
+       <div className="dropdown">
+         <button
+           className="dropdown-toggle dropdown-pending"
+           type="button"
+           id="dropdownMenuButton1"
+           data-bs-toggle="dropdown"
+           aria-expanded="false"
+         >
+           Pending
+         </button>
+         <ul
+           className="dropdown-menu drop-down"
+           aria-labelledby="dropdownMenuButton1"
+         >
+           <li>
+             <span
+               onClick={() => handleApprove(user._id)}
+               className="dropdown-item dropdown-color-approve"
+             >
+               Approve
+             </span>
+           </li>
+           <div className="dropdown-divider"></div>
+           <li>
+             <span
+               onClick={() => handleReject(user._id)}
+               className="dropdown-item dropdown-color-reject"
+             >
+               Reject
+             </span>
+           </li>
+         </ul>
+       </div>
+     );
+ }
+ {
+   user.receiver.vendorId !== user.superAdmin.adminId &&
+     user.superAdmin.adminId !== user.sendor.vendorId &&
+     user.sendor.vendorId !== user.receiver.vendorId &&
+     user.receiver.status === 'pending' &&
+     user.sendor.status === 'requested' &&
+     user.superAdmin.status === 'pending' &&
+     role === '1' && (
+       <div className="dropdown">
+         <button
+           className="dropdown-toggle dropdown-pending"
+           type="button"
+           id="dropdownMenuButton1"
+           data-bs-toggle="dropdown"
+           aria-expanded="false"
+         >
+           Pending
+         </button>
+         <ul
+           className="dropdown-menu drop-down"
+           aria-labelledby="dropdownMenuButton1"
+         >
+           <li>
+             <span
+               onClick={() => handleForward(user._id)}
+               className="dropdown-item dropdown-color-approve"
+             >
+               Forward
+             </span>
+           </li>
+         </ul>
+       </div>
+     );
+ }
+ {
+   /* {user.receiver.vendorId !== user.superAdmin.adminId &&
+                          user.receiver?.status !== "accepted" &&
+                          user.sender?.status !== "accepted" &&
+                          user.superAdmin?.status !== "forwarded" && (
+                            <div className="dropdown">
+                              <button
+                                className="dropdown-toggle dropdown-pending"
+                                type="button"
+                                id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                              >
+                                Pending
+                              </button>
+                              <ul
+                                className="dropdown-menu drop-down"
+                                aria-labelledby="dropdownMenuButton1"
+                              >
+                                <li>
+                                  <span
+                                    onClick={() => handleForward(user._id)}
+                                    className="dropdown-item dropdown-color-approve"
+                                  >
+                                    Forward
+                                  </span>
+                                </li>
+                              </ul>
+                            </div>
+                          )} */
+ }
+ {
+   (user.receiver.vendorId !== user.sendor.adminId) !==
+     user.superAdmin.vendorId &&
+     user.receiver?.status === 'pending' &&
+     user.sendor?.status === 'requested' &&
+     user.superAdmin?.status === 'forwarded' &&
+     role === '1' && (
+       <span className="dropdown-item dropdown-color-approve">Forwarded</span>
+     );
+ }
+ {
+   user.sendor.vendorId === user.superAdmin.adminId &&
+     user.receiver?.status === 'pending' &&
+     user.sendor?.status === 'requested' &&
+     user.superAdmin?.status === 'pending' &&
+     role === '1' && (
+       <span className="dropdown-item dropdown-color-approve">Requested</span>
+     );
+ }
+ {
+   (user.receiver.vendorId !== user.sendor.adminId) !==
+     user.superAdmin.vendorId &&
+     user.receiver.status === 'pending' &&
+     user.sendor.status === 'requested' &&
+     user.superAdmin.status === 'forwarded' &&
+     role === '2' &&
+     user.receiver.vendorId === userId && (
+       <div className="dropdown">
+         <button
+           className="dropdown-toggle dropdown-pending"
+           type="button"
+           id="dropdownMenuButton1"
+           data-bs-toggle="dropdown"
+           aria-expanded="false"
+         >
+           Pending
+         </button>
+         <ul
+           className="dropdown-menu drop-down"
+           aria-labelledby="dropdownMenuButton1"
+         >
+           <li>
+             <span
+               onClick={() => handleApprove(user._id)}
+               className="dropdown-item dropdown-color-approve"
+             >
+               Approve
+             </span>
+           </li>
+           <div className="dropdown-divider"></div>
+           <li>
+             <span
+               onClick={() => handleReject(user._id)}
+               className="dropdown-item dropdown-color-reject"
+             >
+               Reject
+             </span>
+           </li>
+         </ul>
+       </div>
+     );
+ }
+ {
+   user.sendor.vendorId === user.superAdmin.adminId &&
+     user.sendor.vendorId !== user.receiver.vendorId &&
+     user.receiver.vendorId !== user.superAdmin.vendorId &&
+     user.receiver.status === 'pending' &&
+     user.sendor.status === 'requested' &&
+     user.superAdmin.status === 'pending' &&
+     role === '2' &&
+     user.receiver.vendorId === userId && (
+       <div className="dropdown">
+         <button
+           className="dropdown-toggle dropdown-pending"
+           type="button"
+           id="dropdownMenuButton1"
+           data-bs-toggle="dropdown"
+           aria-expanded="false"
+         >
+           Pending
+         </button>
+         <ul
+           className="dropdown-menu drop-down"
+           aria-labelledby="dropdownMenuButton1"
+         >
+           <li>
+             <span
+               onClick={() => handleApprove(user._id)}
+               className="dropdown-item dropdown-color-approve"
+             >
+               Approve
+             </span>
+           </li>
+           <div className="dropdown-divider"></div>
+           <li>
+             <span
+               onClick={() => handleReject(user._id)}
+               className="dropdown-item dropdown-color-reject"
+             >
+               Reject
+             </span>
+           </li>
+         </ul>
+       </div>
+     );
+ }
+ {
+   user.sendor.vendorId === user.superAdmin.adminId &&
+     user.sendor.vendorId !== user.receiver.vendorId &&
+     user.receiver.vendorId !== user.superAdmin.vendorId &&
+     user.receiver.status === 'accepted' &&
+     user.sendor.status === 'pending' &&
+     user.superAdmin.status === 'pending' &&
+     role === '1' &&
+     user.superAdmin.adminId === userId && (
+       <div className="dropdown">
+         <button
+           className="dropdown-toggle dropdown-pending"
+           type="button"
+           id="dropdownMenuButton1"
+           data-bs-toggle="dropdown"
+           aria-expanded="false"
+         >
+           Pending
+         </button>
+         <ul
+           className="dropdown-menu drop-down"
+           aria-labelledby="dropdownMenuButton1"
+         >
+           <li>
+             <span
+               onClick={() => handleApprove(user._id)}
+               className="dropdown-item dropdown-color-approve"
+             >
+               Approve
+             </span>
+           </li>
+           <div className="dropdown-divider"></div>
+           <li>
+             <span
+               onClick={() => handleReject(user._id)}
+               className="dropdown-item dropdown-color-reject"
+             >
+               Reject
+             </span>
+           </li>
+         </ul>
+       </div>
+     );
+ }
+ {
+   user.sendor.vendorId === user.superAdmin.adminId &&
+     user.sendor.vendorId !== user.receiver.vendorId &&
+     user.receiver.vendorId !== user.superAdmin.vendorId &&
+     user.receiver?.status === 'accepted' &&
+     user.sendor?.status === 'pending' &&
+     user.superAdmin?.status === 'pending' &&
+     role === '2' &&
+     user.receiver.vendorId === userId && (
+       <span className="dropdown-item dropdown-color-approve">Approved</span>
+     );
+ }
+ {
+   (user.receiver.vendorId !== user.sendor.adminId) !==
+     user.superAdmin.vendorId &&
+     user.receiver.status === 'accepted' &&
+     user.sendor.status === 'requested' &&
+     user.superAdmin.status === 'requestedback' &&
+     role === '2' &&
+     user.sendor.vendorId === userId && (
+       <span className="dropdown-item dropdown-color-approve">Requested</span>
+     );
+ }
+ {
+ }
+ {
+   user.receiver.vendorId !== user.superAdmin.adminId &&
+     user.receiver?.status === 'accepted' &&
+     user.sendor?.status === 'requested' &&
+     user.superAdmin?.status === 'requestedback' &&
+     role === '1' && (
+       <div className="dropdown">
+         <button
+           className="dropdown-toggle dropdown-pending"
+           type="button"
+           id="dropdownMenuButton1"
+           data-bs-toggle="dropdown"
+           aria-expanded="false"
+         >
+           Pending
+         </button>
+         <ul
+           className="dropdown-menu drop-down"
+           aria-labelledby="dropdownMenuButton1"
+         >
+           <li>
+             <span
+               onClick={() => handleReturn(user._id)}
+               className="dropdown-item dropdown-color-approve"
+             >
+               Return
+             </span>
+           </li>
+         </ul>
+       </div>
+     );
+ }
+ {
+   (user.receiver.vendorId !== user.sendor.adminId) !==
+     user.superAdmin.vendorId &&
+     user.receiver.status === 'accepted' &&
+     user.sendor.status === 'pending' &&
+     user.superAdmin.status === 'returning' &&
+     role === '1' && (
+       <span className="dropdown-item dropdown-color-approve">Returning</span>
+     );
+ }
+
+ {
+   (user.receiver.vendorId !== user.sendor.adminId) !==
+     user.superAdmin.vendorId &&
+     user.receiver?.status === 'accepted' &&
+     user.sendor?.status === 'pending' &&
+     user.superAdmin?.status === 'returning' &&
+     role === '2' &&
+     user.receiver.vendorId === userId && (
+       <span className="dropdown-item dropdown-color-approve">Approved</span>
+     );
+ }
+ {
+   (user.receiver.vendorId !== user.sendor.adminId) !==
+     user.superAdmin.vendorId &&
+     user.receiver?.status === 'pending' &&
+     user.sendor?.status === 'requested' &&
+     user.superAdmin?.status === 'forwarded' &&
+     role === '2' &&
+     user.sendor.vendorId === userId && (
+       <span className="dropdown-item dropdown-color-approve">Requested</span>
+     );
+ }
+ {
+   (user.receiver.vendorId !== user.sendor.adminId) !==
+     user.superAdmin.vendorId &&
+     user.receiver?.status === 'pending' &&
+     user.sendor?.status === 'requested' &&
+     user.superAdmin?.status === 'pending' &&
+     role === '2' &&
+     user.sendor.vendorId === userId && (
+       <span className="dropdown-item dropdown-color-approve">Requested</span>
+     );
+ }
+ {
+   (user.receiver.vendorId !== user.sendor.adminId) !==
+     user.superAdmin.vendorId &&
+     user.receiver?.status === 'accepted' &&
+     user.sendor?.status === 'pending' &&
+     user.superAdmin?.status === 'returning' &&
+     role === '2' &&
+     user.sendor.vendorId === userId && (
+       <div className="dropdown">
+         <button
+           className="dropdown-toggle dropdown-pending"
+           type="button"
+           id="dropdownMenuButton1"
+           data-bs-toggle="dropdown"
+           aria-expanded="false"
+         >
+           Pending
+         </button>
+         <ul
+           className="dropdown-menu drop-down"
+           aria-labelledby="dropdownMenuButton1"
+         >
+           <li>
+             <span
+               onClick={() => handleApprove(user._id)}
+               className="dropdown-item dropdown-color-approve"
+             >
+               Approve
+             </span>
+           </li>
+           <div className="dropdown-divider"></div>
+           <li>
+             <span
+               onClick={() => handleReject(user._id)}
+               className="dropdown-item dropdown-color-reject"
+             >
+               Reject
+             </span>
+           </li>
+         </ul>
+       </div>
+     );
+ }

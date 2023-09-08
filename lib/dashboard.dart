@@ -17,7 +17,7 @@ import 'main.dart';
 
 String? tkn = '';
 Map<String, dynamic> vendorDetails = {}; // Initialize an empty map
-List<dynamic> coupons = []; // Initialize an empty list for coupons
+List<dynamic> coupons = [];
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
 
@@ -27,36 +27,48 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int currentPage = 0;
+  int currentPage2 = 0;
 
+  int totalpages = 0;
 
   void initState() {
     super.initState();
     fetchVendors();
-    fetchCoupons();
+    fetchCoupons(currentPage2);
   }
-  Future<void> fetchCoupons() async {
+  Future<List<Map<String, dynamic>>> fetchCoupons(int page) async {
+    print("page in fetchCoupon $page");
     try {
       String? token = await Login2(phno);
-      tkn =  token;
-      final response = await getAllCoupons(token!);
+      tkn = token;
+      final response = await getAllCoupons(page, token!);
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
+        print(responseData);
 
         if (responseData['couponlist'] != null && responseData['couponlist'] is List) {
-          setState(() {
-            coupons = List.from(responseData['couponlist']);
-          });
+          final List<Map<String, dynamic>> fetchedCoupons =
+          List.from(responseData['couponlist']);
+          totalpages = responseData['totalPages'];
+          return fetchedCoupons; // Return the fetched data
         } else {
           print("Error fetching coupons: Invalid data format");
+          // Return an empty list or handle the error case as needed
+          return [];
         }
       } else {
         print("Error fetching coupons. Status code: ${response.statusCode}");
+        // Return an empty list or handle the error case as needed
+        return [];
       }
     } catch (error) {
       print("Error fetching coupons: $error");
+      // Return an empty list or handle the error case as needed
+      return [];
     }
   }
+
 
   Future<void> fetchVendors() async {
     try {
@@ -645,68 +657,110 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   SizedBox(
                     width: 351,
                     height: 357.31  ,
-                    child: ListView.separated(
-                      scrollDirection: Axis.vertical,
-                      separatorBuilder: (context, index) => SizedBox(height: 16.0),
-                      shrinkWrap: true,
-                      itemCount: 4,
-                      physics: AlwaysScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        final coupon = coupons[index];
 
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: Color(0XFFFFFFFF),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 5.28,
-                                height: 70.09,
-                                decoration: BoxDecoration(
-                                  color: Color(0XFF3574F2),
-                                  borderRadius: BorderRadius.circular(21.0),
-                                ),
-                              ),
-                              SizedBox(width: 15),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      coupon['couponCode'],
-                                      style: TextStyle(
-                                        color: Color(0xff1b2559),
-                                        fontFamily: 'DM Sans',
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 18,
+                    child: PageView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: totalpages, // Number of pages
+                      onPageChanged: (int page) {
+                        setState(() {
+                          currentPage2 = page+1;
+                        });
+                        print("current page $page");
+                      },
+                      itemBuilder: (context, pageIndex) {
+                        return FutureBuilder<List<Map<String, dynamic>>?>(
+                          future: fetchCoupons(currentPage2),
+                          builder: (context, snapshot) {
+                            print("Connection State: ${snapshot.connectionState}");
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              // While waiting for data, display a loading screen
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (snapshot.hasError) {
+                              // Handle error if necessary
+                              return Center(
+                                child: Text("Error fetching data"),
+                              );
+                            } else if (snapshot.hasData) {
+                              // Data has been loaded, display your content
+                              coupons = snapshot.data ?? [];
+                              return SizedBox(
+                                width: 351,
+                                height: 357.31,
+                                child: ListView.separated(
+                                  scrollDirection: Axis.vertical,
+                                  separatorBuilder: (context, index) => SizedBox(height: 16.0),
+                                  shrinkWrap: true,
+                                  itemCount: coupons.length,
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    final coupon = coupons[index];
+
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        color: Color(0XFFFFFFFF),
                                       ),
-                                    ),
-                                    Text(
-                                      coupon['userName'],
-                                      style: TextStyle(
-                                        fontFamily: 'DM Sans',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xffa3aed0),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 5.28,
+                                            height: 70.09,
+                                            decoration: BoxDecoration(
+                                              color: Color(0XFF3574F2),
+                                              borderRadius: BorderRadius.circular(21.0),
+                                            ),
+                                          ),
+                                          SizedBox(width: 15),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  coupon['couponCode'],
+                                                  style: TextStyle(
+                                                    color: Color(0xff1b2559),
+                                                    fontFamily: 'DM Sans',
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  coupon['userName'],
+                                                  style: TextStyle(
+                                                    fontFamily: 'DM Sans',
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xffa3aed0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Text(
+                                            coupon['point'] + " pts",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontFamily: 'DM Sans',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff737784),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                    );
+                                  },
                                 ),
-                              ),
-                              Text(
-                                coupon['point'] + " pts",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'DM Sans',
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xff737784),
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                            ],
-                          ),
+                              );
+                            } else {
+                              // Handle no data case
+                              return Center(
+                                child: Text("No data available"),
+                              );
+                            }
+                          },
                         );
                       },
                     )

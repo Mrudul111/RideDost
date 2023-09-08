@@ -24,7 +24,7 @@ class _RequestPageState extends State<RequestPage> {
   @override
   void initState() {
     // TODO: implement initState
-    print(vendorDetails);
+    fetchRequested();
     is1Active = true;
     super.initState();
   }
@@ -204,7 +204,7 @@ class _RequestPageState extends State<RequestPage> {
       ),
     );
   }
-
+  Map<String, dynamic> requested = {};
   Widget buildRequestItem2(
       String vendorName, String vendorId, String couponDate) {
     return Container(
@@ -335,7 +335,24 @@ class _RequestPageState extends State<RequestPage> {
       ),
     );
   }
+  Future<void> fetchRequested() async {
+    try {
+      String? token = tkn;
+      final response = await approvedList(token!);
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
 
+        setState(() {
+          requested = responseData;
+        });
+        print(requested);
+      } else {
+        print("Error fetching vendors. Status code: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error fetching vendors: $error");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;

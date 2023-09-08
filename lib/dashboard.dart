@@ -43,9 +43,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
 
-        if (responseData['newCoupons'] != null && responseData['newCoupons'] is List) {
+        if (responseData['couponlist'] != null && responseData['couponlist'] is List) {
           setState(() {
-            coupons = List.from(responseData['newCoupons']);
+            coupons = List.from(responseData['couponlist']);
           });
         } else {
           print("Error fetching coupons: Invalid data format");
@@ -479,7 +479,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         scrollDirection: Axis.horizontal,
                         itemCount: 4,
                         itemBuilder: (context, index) {
-                          final vendors = vendorDetails['vendors'] as List<dynamic>?;
+                          final vendors = vendorDetails['vendorsList'] as List<dynamic>?;
                         if (vendors != null && index < vendors.length) {
                           final vendor = vendors[index];
                           return Container(

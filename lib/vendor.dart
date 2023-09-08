@@ -167,7 +167,7 @@ class _VendorListState extends State<VendorList> {
                             itemCount: 4,
                             physics: AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
-                              final vendors = vendorDetails['vendors'] as List<dynamic>?;
+                              final vendors = vendorDetails['vendorsList'] as List<dynamic>?;
                               if (vendors != null && index < vendors.length) {
                                 final vendor = vendors[index];
                                 return Container(

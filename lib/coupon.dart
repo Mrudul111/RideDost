@@ -29,10 +29,10 @@ class _CouponState extends State<Coupon> {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
 
-        if (responseData['newCoupons'] != null &&
-            responseData['newCoupons'] is List) {
+        if (responseData['couponlist'] != null &&
+            responseData['couponlist'] is List) {
           setState(() {
-            coupons = List.from(responseData['newCoupons']);
+            coupons = List.from(responseData['couponlist']);
             print(coupons);
           });
         } else {

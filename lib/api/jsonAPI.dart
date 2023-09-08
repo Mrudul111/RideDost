@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:token/dashboard.dart';
 import '../login.dart';
 
-final String apiUrl = "https://token-web-backend.el.r.appspot.com"; // Replace with your API URL
+String role = "";
+final String apiUrl = "https://fierce-lime-pajamas.cyclic.app/"; // Replace with your API URL
 Future<String?> Login(String number) async {
   try {
     // Make the POST request
@@ -36,9 +37,8 @@ Future<String?> Login2(String number) async {
       // Successful response, parse the data here
       final responseData = jsonDecode(response.body); // Parse JSON response
       final token = responseData['token']; // Extract the 'token' from the response
-      print("Token before modification: $token");
-
       // Remove the last character from the token
+      role = token[token.length-1];
       String modifiedToken = token.substring(0, token.length - 1);
       print("Modified Token: $modifiedToken");
 
@@ -73,9 +73,21 @@ Future<dynamic> getAllVendors(String token) async {
 }
 
 Future<http.Response> getAllCoupons(String token) async {
-  final String baseUrl = apiUrl; // Replace with your actual base URL
-  final String url = '$baseUrl/admin/coupons';
+  final String baseUrl = apiUrl;
 
+  String url = "";
+
+  if(role=='1'){
+    url = 'https://fierce-lime-pajamas.cyclic.app/admin/coupons/admincoupon';
+  }
+  if(role=='2'){
+    url = 'https://fierce-lime-pajamas.cyclic.app/admin/coupons/vendorcoupon';
+  }
+  if(role=='3'){
+    url = 'https://fierce-lime-pajamas.cyclic.app/admin/coupons/usercoupon';
+  }
+  print(role);
+  print(url);
   try {
     final http.Response response = await http.get(
       Uri.parse(url),
@@ -83,6 +95,7 @@ Future<http.Response> getAllCoupons(String token) async {
         'Authorization': 'Bearer $token',
       },
     );
+    print(response.body);
     return response;
   } catch (error) {
     throw error;
@@ -105,36 +118,20 @@ Future<http.Response> sendRequest(String couponCode, String token) async {
     throw error;
   }
 }
+Future<http.Response> approvedList(String token) async {
+  final String url = 'https://fierce-lime-pajamas.cyclic.app/admin/admin/recieved/request';
 
-// Future<void> handleSendRequest(String couponCode) async {
-//   print(couponCode);
-//
-//   // Replace with your actual base URL
-//   final baseUrl = 'YOUR_BASE_URL_HERE';
-//   final url = Uri.parse('$baseUrl/admin/settle/send/$couponCode');
-//   final token = tkn;
-//
-//   try {
-//     final response = await http.post(
-//       url,
-//       headers: {
-//         'Authorization': 'Bearer $token',
-//       },
-//     );
-//
-//     if (response.statusCode == 200) {
-//       print(response.body);
-//       final Map<String, dynamic> data = jsonDecode(response.body);
-//       final coupons = data['coupons'];
-//
-//       setCoupons(coupons);
-//       fetchVendors();
-//     }
-//   } catch (error) {
-//     print(error);
-//   } finally {
-//     dispatch(setFetching(false));
-//   }
-// }
-
+  try {
+    final http.Response response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print(response.body);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
 

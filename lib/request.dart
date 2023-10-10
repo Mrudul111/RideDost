@@ -24,15 +24,21 @@ class _RequestPageState extends State<RequestPage> {
   bool is2Active = false;
   bool is3Active = false;
   int currentPage = 0;
-  int totalpage = 0;
-  int totalpage2 = 0;
+  int totalpage = 2;
+  int totalpage2 = 2;
   int _container = 0;
   int currentPage2 = 0;
+  int currentPage3 = 0;
+  int totalpage3 = 0;
+  int totalpages = 2;
+  int current = 0;
+  bool is4Active = false;
   @override
   void initState() {
     // TODO: implement initState
     fetchRequested(currentPage);
     fetchPaymentSettlement(currentPage2);
+    fetchRejected(currentPage3);
     is1Active = true;
     super.initState();
   }
@@ -40,26 +46,32 @@ class _RequestPageState extends State<RequestPage> {
   String status = "STATUS";
   String dropdownStatus = "Pending";
   String dropdownStatus2 = "pending";
-
   Color dynamicFontColor(String status) {
-    if (status == "STATUS") {
+    if (status == "reject" || status=='STATUS' || status=='rejected') {
       return FCColors.brightRed;
     } else if (status == "pending") {
       return Color(0xfff2a715);
     } else if (status == "requested") {
       return Color(0xff157bf2);
-    } else {
+    } else if(status=='completed'){
+      return Color(0xff800080);
+    }
+    else {
       return Color(0xff07c53c);
     }
   }
   Color dynamicBGColor(String status) {
-    if (status == "STATUS") {
-      return FCColors.brightRed;
+    if (status == "reject"|| status=='STATUS' || status=='rejected') {
+      return Color.fromRGBO(255, 87, 87, 0.1);
     } else if (status == "pending") {
       return Color(0xfffa857);
     } else if (status == "requested") {
       return Colors.lightBlueAccent;
-    } else {
+    }
+    else if(status=='completed'){
+      return Color(0xffcc99ff);
+    }
+    else {
       return Color.fromRGBO(87, 255, 134, 0.1);
     }
   }
@@ -70,7 +82,8 @@ class _RequestPageState extends State<RequestPage> {
         setState(() {
           is1Active = text == "Send Request" ? true : false;
           is2Active = text == "Approve" ? true : false;
-          is3Active = text == "Payment Settlement" ? true : false;
+          is3Active = text == "Reject" ? true : false;
+          is4Active = text == "Payment Settlement" ? true : false;
         });
       },
       child: Container(
@@ -133,15 +146,6 @@ class _RequestPageState extends State<RequestPage> {
                             fontSize: 14,
                           ),
                         ),
-                        Text(
-                          vendorId,
-                          style: TextStyle(
-                            fontFamily: "DM Sans",
-                            fontSize: 10,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff524b6b),
-                          ),
-                        ),
                       ],
                     ),
                   ],
@@ -150,18 +154,16 @@ class _RequestPageState extends State<RequestPage> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   decoration: BoxDecoration(
-                    color: dropdownStatus == "Pending"
-                        ? Color(0xfffa857)
-                        : Colors.lightBlueAccent.shade100,
+                    color: dynamicBGColor('STATUS'),
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Text(
-                    '$dropdownStatus',
+                    'STATUS',
                     style: TextStyle(
                       fontFamily: 'DM Sans',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: dynamicFontColor(dropdownStatus),
+                      color: dynamicFontColor('STATUS'),
                     ),
                   ),
                 ),
@@ -226,8 +228,12 @@ class _RequestPageState extends State<RequestPage> {
 
   List<dynamic> requested = [];
   List<dynamic> settle = [];
-  Widget buildRequestItem2(
-      String vendorName, String vendorId, String couponDate,String user, String status) {
+  List<dynamic> rejected = [];
+  List<dynamic> vendors = [];
+
+  int length = 0;
+  Widget buildRequestItem4(
+      String vendorName, String vendorId, String couponDate,String user, String status,String rvid,String svid, String rstatus,String superadminid, String sstatus,String superadminstatus) {
     return Container(
       width: 335,
       height: 139,
@@ -285,23 +291,7 @@ class _RequestPageState extends State<RequestPage> {
                     ),
                   ],
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: dynamicBGColor(status),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Text(
-                    status,
-                    style: TextStyle(
-                      fontFamily: 'DM Sans',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: dynamicFontColor(status),
-                    ),
-                  ),
-                ),
+                s(rvid,svid,rstatus,sstatus,superadminstatus,superadminid),
               ],
             ),
           ),
@@ -412,7 +402,7 @@ class _RequestPageState extends State<RequestPage> {
                   padding:
                   const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   decoration: BoxDecoration(
-                    color: Colors.purpleAccent.shade100,
+                    color: dynamicBGColor('completed'),
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Text(
@@ -421,7 +411,7 @@ class _RequestPageState extends State<RequestPage> {
                       fontFamily: 'DM Sans',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: dynamicFontColor(status),
+                      color: dynamicFontColor('completed'),
                     ),
                   ),
                 ),
@@ -472,7 +462,129 @@ class _RequestPageState extends State<RequestPage> {
       ),
     );
   }
+  Widget buildRequestItem2(
+      String vendorName, String vendorId, String couponDate,String user, String status) {
+    return Container(
+      width: 335,
+      height: 139,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 8,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Requested by",
+                          style: TextStyle(
+                            fontFamily: "DM Sans",
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 12,
 
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Text(
+                          vendorName,
+                          style: TextStyle(
+                            color: HexColor.fromHex("#150A33"),
+                            fontFamily: 'DM Sans',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          vendorId,
+                          style: TextStyle(
+                            fontFamily: "DM Sans",
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xff524b6b),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: dynamicBGColor(status),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    status,
+                    style: TextStyle(
+                      fontFamily: 'DM Sans',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: dynamicFontColor(status),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 144.39,
+                  height: 30.19,
+
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(93, 107, 152, 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Used by $user",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xff5d6b98),
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  child: Text(
+                    'view details',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Color(0xff3574f2),
+                      fontFamily: 'DM Sans',
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   Future<List<Map<String, dynamic>>> fetchRequested(int currentPage) async {
     try {
       String? token = tkn;
@@ -520,15 +632,16 @@ class _RequestPageState extends State<RequestPage> {
             responseData['settlements'] is List) {
           final List<Map<String, dynamic>> fetch =
           List.from(responseData['settlements']);
-          print(responseData['settlements'].length);
+          length = responseData['settlements'].length;
           totalpage2 = responseData['totalPages'];
+          print("total pages $totalpage2");
           return fetch; // Return the fetched data
         } else {
           print("Error fetching requested data: Invalid data format");
         }
       } else {
         print(
-            "Error fetching requested data. Status code: ${response.statusCode}");
+            "Payment settlement ${response.statusCode}");
       }
     } catch (error) {
       print("Error fetching requested data: $error");
@@ -537,6 +650,72 @@ class _RequestPageState extends State<RequestPage> {
     // Return an empty list or handle the error case as needed
     return [];
   }
+  Future<List<Map<String, dynamic>>> fetchVendors(int page) async {
+    print("page in fetchCoupon $page");
+    try {
+      String? token = tkn;
+
+      final response = await getVendors(page, token!);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        print(responseData);
+
+        if (responseData['vendorsList'] != null &&
+            responseData['vendorsList'] is List) {
+          final List<Map<String, dynamic>> fetchedVendors =
+          List.from(responseData['vendorsList']);
+          totalpages = responseData['totalPages'];
+          print(fetchedVendors);
+
+          return fetchedVendors; // Return the fetched data
+        } else {
+          print("Error fetching coupons: Invalid data format");
+          // Return an empty list or handle the error case as needed
+          return [];
+        }
+      } else{
+        // Return an empty list or handle the error case as needed
+        return [];
+      }
+    } catch (error) {
+      print("Error fetching Vendors: $error");
+      // Return an empty list or handle the error case as needed
+      return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchRejected(int currentPage) async {
+    try {
+      String? token = tkn;
+      final response = await rejectedVendor(currentPage3, token!);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        if (responseData['data'] != null &&
+            responseData['data'] is List) {
+          final List<Map<String, dynamic>> fetch =
+          List.from(responseData['data']);
+          length = responseData['data'].length;
+          totalpage3 = responseData['totalPages'];
+          print("total pages $totalpage3");
+          return fetch; // Return the fetched data
+        } else {
+          print("Error fetching requested data: Invalid data format");
+        }
+      } else {
+        print(
+            "Payment settlement ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error fetching requested data: $error");
+    }
+
+    // Return an empty list or handle the error case as needed
+    return [];
+  }
+
   Row choose(String rvid, String svid, String rstatus, String sstatus, String role,String superadminvid, String superadminstatus, String dropdown,String id){
 
     if(rvid==superadminvid && rstatus!='accepted' && sstatus!='accepted' && rstatus!='pending'){
@@ -638,8 +817,46 @@ class _RequestPageState extends State<RequestPage> {
             onTap:
                 () {
               setState(() {
-                dropdownStatus2 = "Approved";
-                Navigator.pop(context);
+                String reason = ''; // This variable will hold the reason for rejection
+
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Reject Vendor'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Please provide a reason for rejection:'),
+                          TextField(
+                            onChanged: (value) {
+                              reason = value;
+                            },
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            rejectRequest(id, tkn, reason);
+                            Navigator.pop(context);
+                            setState(() {
+
+                            });
+                          },
+                          child: Text('Reject'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // Close the dialog without taking any action
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Cancel'),
+                        ),
+                      ],
+                    );
+                  },
+                );
               });
             },
             child:
@@ -819,10 +1036,48 @@ class _RequestPageState extends State<RequestPage> {
           GestureDetector(
             onTap:
                 () {
-              setState(() {
-                dropdownStatus2 = "Approved";
-                Navigator.pop(context);
-              });
+                  setState(() {
+                    String reason = ''; // This variable will hold the reason for rejection
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Reject Vendor'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Please provide a reason for rejection:'),
+                              TextField(
+                                onChanged: (value) {
+                                  reason = value;
+                                },
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                rejectRequest(id, tkn, reason);
+                                Navigator.pop(context);
+                                setState(() {
+
+                                });
+                              },
+                              child: Text('Reject'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Close the dialog without taking any action
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  });
             },
             child:
             Container(
@@ -1035,10 +1290,48 @@ class _RequestPageState extends State<RequestPage> {
           GestureDetector(
             onTap:
                 () {
-              setState(() {
-                dropdownStatus2 = "Approved";
-                Navigator.pop(context);
-              });
+                  setState(() {
+                    String reason = ''; // This variable will hold the reason for rejection
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Reject Vendor'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Please provide a reason for rejection:'),
+                              TextField(
+                                onChanged: (value) {
+                                  reason = value;
+                                },
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                rejectRequest(id, tkn, reason);
+                                Navigator.pop(context);
+                                setState(() {
+
+                                });
+                              },
+                              child: Text('Reject'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Close the dialog without taking any action
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  });
             },
             child:
             Container(
@@ -1120,10 +1413,48 @@ class _RequestPageState extends State<RequestPage> {
           GestureDetector(
             onTap:
                 () {
-              setState(() {
-                dropdownStatus2 = "Approved";
-                Navigator.pop(context);
-              });
+                  setState(() {
+                    String reason = ''; // This variable will hold the reason for rejection
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Reject Vendor'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Please provide a reason for rejection:'),
+                              TextField(
+                                onChanged: (value) {
+                                  reason = value;
+                                },
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                rejectRequest(id, tkn, reason);
+                                Navigator.pop(context);
+                                setState(() {
+
+                                });
+                              },
+                              child: Text('Reject'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Close the dialog without taking any action
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  });
             },
             child:
             Container(
@@ -1242,52 +1573,6 @@ class _RequestPageState extends State<RequestPage> {
         ],
       );
     }
-    if(superadminstatus=='returning'&&rstatus=='accepted'){
-      print("11");
-      return Row(
-        mainAxisAlignment:
-        MainAxisAlignment
-            .center,
-        crossAxisAlignment:
-        CrossAxisAlignment
-            .center,
-        children: [
-          GestureDetector(
-            onTap:
-                () {
-              setState(() {
-                Navigator.pop(context);
-              });
-            },
-            child:
-            Container(
-              width:
-              300,
-              height:
-              56,
-              decoration:
-              BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Color(0xff3574f2)),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child:
-              Center(
-                child: Text(
-                  "Go back",
-                  style: TextStyle(
-                    color:Color(0xff3574f2),
-                    fontFamily: "SF Pro Display",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
     if(rvid!=superadminvid && svid!=superadminvid && svid!=rvid  && rstatus=='pending' && sstatus=='requested' && superadminstatus=='forwarded' && role=="2"){
       print("12");
       return Row(
@@ -1301,10 +1586,48 @@ class _RequestPageState extends State<RequestPage> {
           GestureDetector(
             onTap:
                 () {
-              setState(() {
-                dropdownStatus2 = "Approved";
-                Navigator.pop(context);
-              });
+                  setState(() {
+                    String reason = ''; // This variable will hold the reason for rejection
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Reject Vendor'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Please provide a reason for rejection:'),
+                              TextField(
+                                onChanged: (value) {
+                                  reason = value;
+                                },
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                rejectRequest(id, tkn, reason);
+                                Navigator.pop(context);
+                                setState(() {
+
+                                });
+                              },
+                              child: Text('Reject'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Close the dialog without taking any action
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  });
             },
             child:
             Container(
@@ -1374,7 +1697,7 @@ class _RequestPageState extends State<RequestPage> {
       );
     }
     if(rvid!=superadminvid && svid!=superadminvid && svid!=rvid  && rstatus=='accepted' && sstatus=='requested' && superadminstatus=='requestedback' && role=="1"){
-      print("12");
+      print("13");
       return Row(
         mainAxisAlignment:
         MainAxisAlignment
@@ -1420,13 +1743,436 @@ class _RequestPageState extends State<RequestPage> {
         ],
       );
     }
+    if(rvid!=superadminvid && svid!=superadminvid && svid!=rvid  && rstatus=='accepted' && sstatus=='pending' && superadminstatus=='returning' && role=="2" && svid==uid){
+      print("14");
+      return Row(
+        mainAxisAlignment:
+        MainAxisAlignment
+            .center,
+        crossAxisAlignment:
+        CrossAxisAlignment
+            .center,
+        children: [
+          GestureDetector(
+            onTap:
+                () {
+                  setState(() {
+                    String reason = ''; // This variable will hold the reason for rejection
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Reject Vendor'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Please provide a reason for rejection:'),
+                              TextField(
+                                onChanged: (value) {
+                                  reason = value;
+                                },
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                rejectRequest(id, tkn, reason);
+                                Navigator.pop(context);
+                                setState(() {
+
+                                });
+                              },
+                              child: Text('Reject'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Close the dialog without taking any action
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  });
+            },
+            child:
+            Container(
+              width:
+              150,
+              height:
+              28,
+              decoration:
+              BoxDecoration(
+                color: dropdownStatus2 == "Requested" ? Color(0xff3574f2) : Colors.white,
+                border: Border.all(color: Color(0xff3574f2)),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child:
+              Center(
+                child: Text(
+                  "Reject",
+                  style: TextStyle(
+                    color: dropdownStatus2 == "Requested" ? Colors.white : Color(0xff3574f2),
+                    fontFamily: "SF Pro Display",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width:
+            15,
+          ),
+          GestureDetector(
+            onTap:
+                () async{
+              await vendorAcceptRequest(id, tkn!);
+              setState(() {
+                Navigator.pop(context);
+              });
+            },
+            child:
+            Container(
+              width:
+              150,
+              height:
+              28,
+              decoration:
+              BoxDecoration(
+                color:Color(0xff3574f2),
+                border: Border.all(color: Color(0xff3574f2)),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child:
+              Center(
+                child: Text(
+                  "Approve",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "SF Pro Display",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    if(rstatus=='rejected' && sstatus=='rejected' && superadminstatus=='rejected'&& rvid==uid){
+      return Row(
+        mainAxisAlignment:
+        MainAxisAlignment
+            .center,
+        crossAxisAlignment:
+        CrossAxisAlignment
+            .center,
+        children: [
+          GestureDetector(
+            onTap:
+                () {
+              setState(() {
+                dropdownStatus2 = "Approved";
+                Navigator.pop(context);
+              });
+            },
+            child:
+            Container(
+              width:
+              150,
+              height:
+              28,
+              decoration:
+              BoxDecoration(
+                color: dropdownStatus2 == "Requested" ? Color(0xff3574f2) : Colors.white,
+                border: Border.all(color: Color(0xff3574f2)),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child:
+              Center(
+                child: Text(
+                  dropdownStatus2 == "Requested" ? "Approve" : "Go back",
+                  style: TextStyle(
+                    color: dropdownStatus2 == "Requested" ? Colors.white : Color(0xff3574f2),
+                    fontFamily: "SF Pro Display",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width:
+            15,
+          ),
+          GestureDetector(
+            onTap:
+                () {
+              setState(() {
+                dropdownStatus2 = "Approved";
+                Navigator.pop(context);
+              });
+            },
+            child:
+            Container(
+              width:
+              150,
+              height:
+              28,
+              decoration:
+              BoxDecoration(
+                color:Color(0xff3574f2),
+                border: Border.all(color: Color(0xff3574f2)),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child:
+              Center(
+                child: Text(
+                  "Approve",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "SF Pro Display",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    if(rstatus=='rejected' && sstatus=='rejected' && superadminstatus=='rejected'&& rvid==uid){
+      return Row(
+        mainAxisAlignment:
+        MainAxisAlignment
+            .center,
+        crossAxisAlignment:
+        CrossAxisAlignment
+            .center,
+        children: [
+          GestureDetector(
+            onTap:
+                () {
+              setState(() {
+                dropdownStatus2 = "Approved";
+                Navigator.pop(context);
+              });
+            },
+            child:
+            Container(
+              width:
+              150,
+              height:
+              28,
+              decoration:
+              BoxDecoration(
+                color: dropdownStatus2 == "Requested" ? Color(0xff3574f2) : Colors.white,
+                border: Border.all(color: Color(0xff3574f2)),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child:
+              Center(
+                child: Text(
+                  dropdownStatus2 == "Requested" ? "Approve" : "Go back",
+                  style: TextStyle(
+                    color: dropdownStatus2 == "Requested" ? Colors.white : Color(0xff3574f2),
+                    fontFamily: "SF Pro Display",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width:
+            15,
+          ),
+          GestureDetector(
+            onTap:
+                () {
+              setState(() {
+                dropdownStatus2 = "Approved";
+                Navigator.pop(context);
+              });
+            },
+            child:
+            Container(
+              width:
+              150,
+              height:
+              28,
+              decoration:
+              BoxDecoration(
+                color:Color(0xff3574f2),
+                border: Border.all(color: Color(0xff3574f2)),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child:
+              Center(
+                child: Text(
+                  "Approve",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "SF Pro Display",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
     return Row(
       children: [
 
       ],
     );
   }
-
+  Container s (String rvid, String svid, String rstatus, String sstatus, String superadminstatus, String superadminid){
+    if(rstatus=='pending' && sstatus=='requested' && superadminstatus=='rejected' && rvid==superadminid && rvid!=svid && superadminid!=svid && rvid==uid){
+      return Container(
+        padding:
+        const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        decoration: BoxDecoration(
+          color: dynamicBGColor('pending'),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Text(
+          'pending',
+          style: TextStyle(
+            fontFamily: 'DM Sans',
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: dynamicFontColor('pending'),
+          ),
+        ),
+      );
+    }
+    if(rstatus=='pending' && sstatus=='rejected' && superadminstatus=='accepted' && rvid==superadminid && rvid!=svid && superadminid!=svid && svid==uid){
+      return Container(
+        padding:
+        const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        decoration: BoxDecoration(
+          color: dynamicBGColor('pending'),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Text(
+          'pending',
+          style: TextStyle(
+            fontFamily: 'DM Sans',
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: dynamicFontColor('pending'),
+          ),
+        ),
+      );
+    }
+    if(rstatus=='rejected' && sstatus=='requested' && superadminstatus=='pending' && svid==superadminid && rvid!=svid && superadminid!=rvid && rvid==uid){
+      return Container(
+        padding:
+        const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        decoration: BoxDecoration(
+          color: dynamicBGColor('pending'),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Text(
+          'pending',
+          style: TextStyle(
+            fontFamily: 'DM Sans',
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: dynamicFontColor('pending'),
+          ),
+        ),
+      );
+    }
+    if(rstatus=='accpeted' && sstatus=='rejected' && superadminstatus=='pending' && svid==superadminid && rvid!=svid && superadminid!=rvid && superadminid==uid){
+      return Container(
+        padding:
+        const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        decoration: BoxDecoration(
+          color: dynamicBGColor('pending'),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Text(
+          'pending',
+          style: TextStyle(
+            fontFamily: 'DM Sans',
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: dynamicFontColor('pending'),
+          ),
+        ),
+      );
+    }
+    if(rstatus=='rejected' && sstatus=='requested' && superadminstatus=='forwarded' && rvid!=superadminid && rvid!=svid && superadminid!=svid && rvid==uid){
+      return Container(
+        padding:
+        const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        decoration: BoxDecoration(
+          color: dynamicBGColor('pending'),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Text(
+          'pending',
+          style: TextStyle(
+            fontFamily: 'DM Sans',
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: dynamicFontColor('pending'),
+          ),
+        ),
+      );
+    }
+    if(rstatus=='accepted' && sstatus=='rejected' && superadminstatus=='returning' && rvid!=superadminid && rvid!=svid && superadminid!=svid && svid==uid){
+      return Container(
+        padding:
+        const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        decoration: BoxDecoration(
+          color: dynamicBGColor('pending'),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Text(
+          'pending',
+          style: TextStyle(
+            fontFamily: 'DM Sans',
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: dynamicFontColor('pending'),
+          ),
+        ),
+      );
+    }
+    return Container(
+      padding:
+      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      decoration: BoxDecoration(
+        color: dynamicBGColor('rejected'),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Text(
+        'rejected',
+        style: TextStyle(
+          fontFamily: 'DM Sans',
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: dynamicFontColor('reject'),
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -1508,7 +2254,9 @@ class _RequestPageState extends State<RequestPage> {
                       buildTopButtons("Approve", is2Active, screenWidth),
                       SizedBox(width: screenWidth * 0.01),
                       buildTopButtons(
-                          "Payment Settlement", is3Active, screenWidth),
+                          "Reject", is3Active, screenWidth),
+                      buildTopButtons(
+                          "Payment Settlement", is4Active, screenWidth)
                     ],
                   ),
                 ),
@@ -1524,81 +2272,117 @@ class _RequestPageState extends State<RequestPage> {
                               child: Container(
                                 width: 335,
                                 height: 449,
-                                child: ListView.separated(
-                                  separatorBuilder: (context, index) =>
-                                      SizedBox(height: 16.0),
-                                  shrinkWrap: true,
-                                  itemCount: 6,
-                                  physics: AlwaysScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    final vendors = vendorDetails['vendorsList']
-                                        as List<dynamic>?;
-                                    if (vendors != null &&
-                                        index < vendors.length) {
-                                      final vendor = vendors[index];
-                                      final String id = vendor['_id'];
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Future<dynamic> getAllVendorsDetails(
-                                              String token) async {
-                                            try {
-                                              final response = await http.get(
-                                                Uri.parse(
-                                                    'https://fierce-lime-pajamas.cyclic.app/admin/settle/coupon/$id'),
-                                                headers: {
-                                                  'Authorization':
-                                                      'Bearer $token',
+                                  child :PageView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: totalpage, // Number of pages
+                                    onPageChanged: (int page) {
+                                      setState(() {
+                                        current = page + 1;
+                                      });
+                                      print("current page $page");
+                                    },
+                                    itemBuilder: (context, pageIndex) {
+                                      return FutureBuilder<
+                                          List<Map<String, dynamic>>?>(
+                                          future: fetchVendors(current),
+                                          builder: (context, snapshot) {
+                                            print(
+                                                "Connection State: ${snapshot.connectionState}");
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              // While waiting for data, display a loading screen
+                                              return Center(
+                                                child:
+                                                CircularProgressIndicator(),
+                                              );
+                                            } else if (snapshot.hasError) {
+                                              // Handle error if necessary
+                                              return Center(
+                                                child:
+                                                Text("Error fetching data"),
+                                              );
+                                            } else {
+                                              vendors = snapshot.data ?? [];
+                                              return ListView.separated(
+                                                separatorBuilder: (context, index) =>
+                                                    SizedBox(height: 16.0),
+                                                shrinkWrap: true,
+                                                itemCount: vendors.length,
+                                                physics: AlwaysScrollableScrollPhysics(),
+                                                itemBuilder: (context, index) {
+                                                  if (vendors != null &&
+                                                      index < vendors.length) {
+                                                    final vendor = vendors[index];
+                                                    final String id = vendor['_id'];
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        Future<dynamic> getAllVendorsDetails(
+                                                            String token) async {
+                                                          try {
+                                                            final response = await http.get(
+                                                              Uri.parse(
+                                                                  '$apiUrl/$id'),
+                                                              headers: {
+                                                                'Authorization':
+                                                                'Bearer $token',
+                                                              },
+                                                            );
+                                                            print(response.body);
+                                                            return response;
+                                                          } catch (error) {
+                                                            // print(error);
+                                                            print(error);
+                                                            return {'status': false};
+                                                            // throw error;
+                                                          }
+                                                        }
+
+                                                        Future<void>
+                                                        fetchVendorsDetails() async {
+                                                          try {
+                                                            String? token = tkn;
+                                                            final response =
+                                                            await getAllVendorsDetails(
+                                                                tkn!);
+
+                                                            if (response.statusCode == 200) {
+                                                              final responseData =
+                                                              jsonDecode(response.body);
+                                                              setState(() {
+                                                                details =
+                                                                    responseData; // Initialize the vendorDetails map with the parsed JSON data
+                                                              });
+                                                              print(details);
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          list()));
+                                                            } else {
+                                                              print(response.body);
+                                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("No pending requests")));
+                                                              print(
+                                                                  "Error fetching vendors. Status code: ${response.statusCode}");
+                                                            }
+                                                          } catch (error) {
+                                                            print(
+                                                                "Error fetching vendors: $error");
+                                                          }
+                                                        }
+
+                                                        fetchVendorsDetails();
+                                                      },
+                                                      child: buildRequestItem(vendor['name'],
+                                                          vendor['_id'], "21st JUN 2022"),
+                                                    );
+                                                  }
                                                 },
                                               );
-                                              return response;
-                                            } catch (error) {
-                                              // print(error);
-                                              print(error);
-                                              return {'status': false};
-                                              // throw error;
                                             }
-                                          }
+                                          });
+                                    },
+                                  )
 
-                                          Future<void>
-                                              fetchVendorsDetails() async {
-                                            try {
-                                              String? token = tkn;
-                                              final response =
-                                                  await getAllVendorsDetails(
-                                                      tkn!);
-
-                                              if (response.statusCode == 200) {
-                                                final responseData =
-                                                    jsonDecode(response.body);
-                                                setState(() {
-                                                  details =
-                                                      responseData; // Initialize the vendorDetails map with the parsed JSON data
-                                                });
-                                                print(details);
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            list()));
-                                              } else {
-                                                print(response.body);
-                                                print(
-                                                    "Error fetching vendors. Status code: ${response.statusCode}");
-                                              }
-                                            } catch (error) {
-                                              print(
-                                                  "Error fetching vendors: $error");
-                                            }
-                                          }
-
-                                          fetchVendorsDetails();
-                                        },
-                                        child: buildRequestItem(vendor['name'],
-                                            vendor['_id'], "21st JUN 2022"),
-                                      );
-                                    }
-                                  },
-                                ),
                               ),
                             ),
                           )
@@ -1878,7 +2662,363 @@ class _RequestPageState extends State<RequestPage> {
                                 ),
                               ),
                             ),
-                          ): Container(
+                          ):
+                    is3Active? Container(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Padding(
+                          padding: EdgeInsets.all(screenWidth * 0.02),
+                          child: Container(
+                            width: 335,
+                            height: 449,
+                            child: PageView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: totalpage3, // Number of pages
+                              onPageChanged: (int page) {
+                                setState(() {
+                                  currentPage3 = page + 1;
+                                });
+                                print("current page $page");
+                              },
+                              itemBuilder: (context, pageIndex) {
+                                return FutureBuilder<
+                                    List<Map<String, dynamic>>?>(
+                                    future: fetchRejected(currentPage3),
+                                    builder: (context, snapshot) {
+                                      print(
+                                          "Connection State: ${snapshot.connectionState}");
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        // While waiting for data, display a loading screen
+                                        return Center(
+                                          child:
+                                          CircularProgressIndicator(),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        // Handle error if necessary
+                                        return Center(
+                                          child:
+                                          Text("Error fetching data"),
+                                        );
+                                      } else {
+                                        rejected = snapshot.data ?? [];
+                                        return ListView.separated(
+                                          separatorBuilder:
+                                              (context, index) =>
+                                              SizedBox(height: 16.0),
+                                          shrinkWrap: true,
+                                          itemCount: rejected.length,
+                                          physics:
+                                          AlwaysScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            final rej = rejected[index];
+                                            return GestureDetector(
+                                              onTap: () {
+                                                showModalBottomSheet(
+                                                    context: context,
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.only(
+                                                            topLeft: Radius
+                                                                .circular(
+                                                                34),
+                                                            topRight: Radius
+                                                                .circular(
+                                                                34))),
+                                                    builder: (context) {
+                                                      return SingleChildScrollView(
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(
+                                                              bottom: MediaQuery.of(
+                                                                  context)
+                                                                  .viewInsets
+                                                                  .bottom),
+                                                          child: Container(
+                                                            width: double
+                                                                .infinity,
+                                                            padding: const EdgeInsets
+                                                                .symmetric(
+                                                                vertical:
+                                                                20,
+                                                                horizontal:
+                                                                30),
+                                                            height: 375,
+                                                            decoration: const BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius: BorderRadius.only(
+                                                                    topLeft:
+                                                                    Radius.circular(
+                                                                        34),
+                                                                    topRight:
+                                                                    Radius.circular(34))),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                              MainAxisAlignment.spaceEvenly,
+                                                              children: [
+                                                                SizedBox(
+                                                                  height:
+                                                                  20,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                                  children: [
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                      CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Text(
+                                                                          rej['sendor']['vendorName'],
+                                                                          style: TextStyle(
+                                                                            fontSize: 25,
+                                                                            fontFamily: "SF Pro Display",
+                                                                            fontWeight: FontWeight.w700,
+                                                                            color: Color(0xff150b3d),
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          "used by ${rej['user']['name']}",
+                                                                          style: TextStyle(
+                                                                            fontSize: 15,
+                                                                            fontFamily: "SF Pro Display",
+                                                                            fontWeight: FontWeight.w300,
+                                                                            color: Color(0xff737784),
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(
+                                                                  height:
+                                                                  30,
+                                                                ),
+                                                                DottedBorder(
+                                                                  color: Color(
+                                                                      0xff737784), //color of dotted/dash line
+                                                                  strokeWidth:
+                                                                  3, //thickness of dash/dots
+                                                                  dashPattern: [
+                                                                    10,
+                                                                    6
+                                                                  ],
+                                                                  child:
+                                                                  Container(
+                                                                    width:
+                                                                    297,
+                                                                    height:
+                                                                    50.13,
+                                                                    child:
+                                                                    Center(
+                                                                      child:
+                                                                      Text(
+                                                                        rej['coupon']['couponCode'],
+                                                                        style:
+                                                                        TextStyle(
+                                                                          fontFamily: "SF Pro Display",
+                                                                          color: Color(0xff150b3d),
+                                                                          fontWeight: FontWeight.w700,
+                                                                          fontSize: 22.7,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                                  children: [
+                                                                    Row(
+                                                                      children: [
+                                                                        Icon(
+                                                                          Icons.access_time_outlined,
+                                                                          color: Color(0xff737784),
+                                                                          size: 13.66,
+                                                                        ),
+                                                                        Text(
+                                                                          "20 days left",
+                                                                          style: TextStyle(
+                                                                            color: Color(0xff737784),
+                                                                            fontFamily: "SF Pro Display",
+                                                                            fontSize: 13.66,
+                                                                            fontWeight: FontWeight.w300,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                      10,
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        Icon(
+                                                                          Icons.refresh,
+                                                                          color: Color(0xff737784),
+                                                                          size: 13.66,
+                                                                        ),
+                                                                        Text(
+                                                                          role=="1"?rej['superAdmin']['status']:rej['receiver']['status'],
+                                                                          style: TextStyle(
+                                                                            color: Color(0xff737784),
+                                                                            fontFamily: "SF Pro Display",
+                                                                            fontSize: 13.66,
+                                                                            fontWeight: FontWeight.w300,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(
+                                                                  height:
+                                                                  50,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                                  children: [
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        Navigator.pop(context);
+
+                                                                      },
+                                                                      child:
+                                                                      Container(
+                                                                        width:
+                                                                        150,
+                                                                        height:
+                                                                        28,
+                                                                        decoration:
+                                                                        BoxDecoration(
+                                                                          color: dropdownStatus2 == "Requested" ? Color(0xff3574f2) : Colors.white,
+                                                                          border: Border.all(color: Color(0xff3574f2)),
+                                                                          borderRadius: BorderRadius.circular(30),
+                                                                        ),
+                                                                        child:
+                                                                        Center(
+                                                                          child: Text(
+                                                                            "Go back",
+                                                                            style: TextStyle(
+                                                                              color: dropdownStatus2 == "Requested" ? Colors.white : Color(0xff3574f2),
+                                                                              fontFamily: "SF Pro Display",
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.w500,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                      15,
+                                                                    ),
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          () async{
+                                                                        await vendorAcceptRequest(rej['_id'], tkn!);
+                                                                        setState(() {
+                                                                          Navigator.pop(context);
+                                                                        });
+                                                                      },
+                                                                      child:
+                                                                      Container(
+                                                                        width:
+                                                                        150,
+                                                                        height:
+                                                                        28,
+                                                                        decoration:
+                                                                        BoxDecoration(
+                                                                          color:Color(0xff3574f2),
+                                                                          border: Border.all(color: Color(0xff3574f2)),
+                                                                          borderRadius: BorderRadius.circular(30),
+                                                                        ),
+                                                                        child:
+                                                                        Center(
+                                                                          child: Text(
+                                                                            "Approve",
+                                                                            style: TextStyle(
+                                                                              color: Colors.white,
+                                                                              fontFamily: "SF Pro Display",
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.w500,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(
+                                                                    height:
+                                                                    10),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      "Have any issue?",
+                                                                      style:
+                                                                      TextStyle(
+                                                                        color:
+                                                                        Color(0xff737784),
+                                                                        fontFamily:
+                                                                        "SF Pro Display",
+                                                                        fontSize:
+                                                                        14,
+                                                                        fontWeight:
+                                                                        FontWeight.w400,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      "Contact Us",
+                                                                      style:
+                                                                      TextStyle(
+                                                                        color:
+                                                                        Color(0xff1d3a70),
+                                                                        fontFamily:
+                                                                        "SF Pro Display",
+                                                                        fontSize:
+                                                                        16.94,
+                                                                        fontWeight:
+                                                                        FontWeight.w700,
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    });
+                                              },
+                                              child: buildRequestItem4(
+                                                  rej['sendor']['vendorName'],
+                                                  rej['sendor']['vendorId'],
+                                                  rej['sendor']['Date'],rej['user']['name'],role=="1"?rej['superAdmin']['status']:rej['receiver']['status'],rej['receiver']['vendorId'],rej['sendor']['vendorId'],rej['receiver']['status'],rej['sendor']['status'],rej['superAdmin']['status'],rej['superAdmin']['adminId']),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ):Container(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.vertical,
                         child: Padding(
@@ -1891,14 +3031,14 @@ class _RequestPageState extends State<RequestPage> {
                               itemCount: totalpage2, // Number of pages
                               onPageChanged: (int page) {
                                 setState(() {
-                                  currentPage2 = page + 1;
+                                  currentPage2 = page+1;
                                 });
                                 print("current page $page");
                               },
                               itemBuilder: (context, pageIndex) {
                                 return FutureBuilder<
                                     List<Map<String, dynamic>>?>(
-                                    future: fetchRequested(currentPage2),
+                                    future: fetchPaymentSettlement(currentPage2),
                                     builder: (context, snapshot) {
                                       print(
                                           "Connection State: ${snapshot.connectionState}");
@@ -1927,7 +3067,7 @@ class _RequestPageState extends State<RequestPage> {
                                           AlwaysScrollableScrollPhysics(),
                                           itemBuilder: (context, index) {
                                             final set = settle[index];
-                                            return buildRequestItem3('vendorName',set['coupon']['couponCode'],set['user']['name']);
+                                            return buildRequestItem3(set['coupon']['couponCode'],set['coupon']['couponCode'],set['user']['name']);
                                           },
                                         );
                                       }
@@ -1937,7 +3077,8 @@ class _RequestPageState extends State<RequestPage> {
                           ),
                         ),
                       ),
-                    ))
+                    )
+                )
                 ,
               ],
             ),

@@ -3,21 +3,35 @@
 
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:token/profilePage.dart';
+import 'activity.dart';
 import 'api/adminApi.dart';
 
 import 'api/jsonAPI.dart';
+import 'cameraQR.dart';
 import 'login.dart';
 import 'main.dart';
+import 'myCard.dart';
 
-String? tkn = '';
-Map<String, dynamic> vendorDetails = {}; // Initialize an empty map
+String id = '';
 List<dynamic> coupons = [];
+Map<String, dynamic> vendorDetails = {};
+
+int selectedIndex = 0;
+final List<Widget> pages = [
+  DashboardScreen(),
+  myCard(),
+  cameraQR(),
+  activity(),
+  profilePage()
+];
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
 
@@ -28,20 +42,25 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int currentPage = 0;
   int currentPage2 = 0;
+  Map<String, dynamic>? profile = {};
+  String username = "";
 
-  int totalpages = 0;
 
+  int totalpages = 1;
   void initState() {
     super.initState();
+    fetchProfileInfo();
+    chartData(tkn);
     fetchVendors();
     fetchCoupons(currentPage2);
   }
+   Map<dynamic, dynamic> chartValue = {};
   Future<List<Map<String, dynamic>>> fetchCoupons(int page) async {
     print("page in fetchCoupon $page");
     try {
-      String? token = await Login2(phno);
-      tkn = token;
-      final response = await getAllCoupons(page, token!);
+
+      final response = await getAllCoupons(page, tkn);
+      print(tkn);
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
@@ -69,10 +88,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-
   Future<void> fetchVendors() async {
     try {
-      String? token = await Login2(phno);
+      String? token = tkn;
       final response = await getAllVendors(token!);
 
       if (response.statusCode == 200) {
@@ -89,8 +107,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
       print("Error fetching vendors: $error");
     }
   }
+  Future<void> fetchProfileInfo() async {
+    try {
+      String? token = tkn;
 
+      if (token == null) {
+        print("Token is null");
+        return; // Return early to avoid making the API request
+      }
 
+      final response = await getProfileInfo(token);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        if (responseData != null && responseData is Map<String, dynamic>) {
+          setState(() {
+            profile = responseData;
+            final vendorInfo = profile!['vendorInfo'][0];
+            username = vendorInfo['name'];
+          });
+          return;
+        } else {
+          print("Invalid response data format");
+        }
+      } else {
+        print("Error fetching profile. Status code: ${response.statusCode}");
+      }
+      return;
+    } catch (error) {
+      print("Error fetching profile: $error");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,16 +203,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     SizedBox(height: 20,),
-                    Container(
+                    Container (
                       height: 50.0,
                       decoration:  BoxDecoration(
-                          color: currentRoute == '/manageteam' ? Colors.blue : Colors.transparent,
+                          color: currentRoute == '/profile' ? Color(0xff3574f2) : Colors.transparent,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(5.0),
                               bottomLeft: Radius.circular(5.0))),
                       child: TextButton(
                         onPressed: () {
+                          Navigator.pushNamed(context, '/profile');
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
 
+                          children: [
+                            Icon(
+                              Icons.person_outline_outlined,
+                              color:  currentRoute=='/profile'? Colors.white : Color(0xFF737784),
+                              size: 30.0,
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Text(
+                              'Profile',
+                              style: TextStyle(
+                                  color:  currentRoute=='/profile'? Colors.white : Color(0xFF737784),
+                                  fontSize: 18.0,
+                                  fontFamily: 'Mazzart',
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      height: 50.0,
+                      decoration:  BoxDecoration(
+                          color: currentRoute == '/vendor' ? Colors.blue : Colors.transparent,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0))),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/vendor');
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -231,14 +315,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Container(
                       height: 50.0,
                       decoration:  BoxDecoration(
-                          color: currentRoute == '/vendor' ? Color(0xff3574f2) : Colors.transparent,
+                          color: currentRoute == '/manageteam' ? Color(0xff3574f2) : Colors.transparent,
 
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(5.0),
                               bottomLeft: Radius.circular(5.0))),
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/vendor');
+                          Navigator.pushNamed(context, '/manageteam');
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -274,14 +358,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               bottomLeft: Radius.circular(5.0))),
                       child: TextButton(
                         onPressed: () {
-
+                          Navigator.pushNamed(context, '/listing');
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
 
                           children: [
                             Icon(
-                              Icons.shopping_cart_outlined,
+                              Icons.shopping_bag_outlined,
                               color: Color(0xFF737784),
                               size: 30.0,
                             ),
@@ -375,6 +459,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(height: 20,),
                     Container(
                       height: 50.0,
+                      decoration:  BoxDecoration(
+                          color: currentRoute == '/checkout' ? Colors.blue : Colors.transparent,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0))),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/checkout');
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+
+                          children: [
+                            Icon(
+                              Icons.shopping_cart_outlined,
+                              color: Color(0xFF737784),
+                              size: 30.0,
+                            ),
+                            const SizedBox(
+                              width: 15.0,
+                            ),
+                            Text(
+                              'Checkout',
+                              style: TextStyle(
+                                  color: Color(0xFF737784),
+                                  fontSize: 18.0,
+                                  fontFamily: 'Mazzart',
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      height: 50.0,
                       decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(5.0),
@@ -427,19 +547,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Welcome back!",
-                    style: TextStyle(
-                        color: Color(0xFF737784),
-                        fontSize: 18
-                    ),
-                  ),
-                  Text(
-                    "Mrudul Killedar",
-                    style: TextStyle(
-                        color: Color(0xFF1D3A70),
-                        fontSize: 28
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Welcome back!",
+                            style: TextStyle(
+                                color: Color(0xFF737784),
+                                fontSize: 18
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.pushNamed(context, '/notification');
+                            },
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: Color(0xfff9fafb),
+                                borderRadius: BorderRadius.circular(12)
+                              ),
+                              child: Icon(
+                                Icons.notifications_none_outlined
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        username,
+                        style: TextStyle(
+                            color: Color(0xFF1D3A70),
+                            fontSize: 28
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20,),
                   Container(
@@ -447,7 +593,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     width: 327,
                     child: LineChartSample2(),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(height: 50,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -461,7 +607,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       GestureDetector(
                         onTap: (){
-                          Navigator.pushNamed(context, '/vendor');
+                          Navigator.pushNamed(context, '/manageteam');
                         },
                         child: Row(
                           children: [
@@ -494,6 +640,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           final vendors = vendorDetails['vendorsList'] as List<dynamic>?;
                         if (vendors != null && index < vendors.length) {
                           final vendor = vendors[index];
+                          id = vendor['_id'];
                           return Container(
                             margin: EdgeInsets.symmetric(horizontal: 8.0),
                             decoration: BoxDecoration(
@@ -682,7 +829,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               return Center(
                                 child: Text("Error fetching data"),
                               );
-                            } else if (snapshot.hasData) {
+                            }
+                            else if (snapshot.hasData) {
                               // Data has been loaded, display your content
                               coupons = snapshot.data ?? [];
                               return SizedBox(
@@ -692,7 +840,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   scrollDirection: Axis.vertical,
                                   separatorBuilder: (context, index) => SizedBox(height: 16.0),
                                   shrinkWrap: true,
-                                  itemCount: coupons.length,
+                                  itemCount: 3,
                                   physics: AlwaysScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     final coupon = coupons[index];
@@ -773,49 +921,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: Color(0xFF6b7280),
-        selectedItemColor: Color(0xFF1D3A70),
-        showUnselectedLabels: true,
-        showSelectedLabels: true,
-        unselectedLabelStyle: TextStyle(
-          color: Color(0xFF6b7280),
-        ),
-        items: [
-          BottomNavigationBarItem(
-            icon: Container(
-              width: 24,
-              height: 24,
-              child: Icon(Icons.home),
-            ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.credit_card),
-            label: 'My Card',
-          ),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(child: Icon(Icons.qr_code_scanner), radius: 25,),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Container(
-              width: 24,
-              height: 24,
-              child: Icon(Icons.show_chart),
-            ),
-            label: 'Activity',
-          ),
-          BottomNavigationBarItem(
-            icon: Container(
-              width: 24,
-              height: 24,
-              child: Icon(Icons.person_outline_outlined),
-            ),
-            label: 'Profile',
-          ),
-        ],
-      ),
+
 
     );
   }
@@ -833,9 +939,42 @@ class _LineChartSample2State extends State<LineChartSample2> {
     Color(0xff1d3cab),
     Color(0xff2f35b9)
   ];
+  List<dynamic> arr = [1,1,1,1,1,1,1];
+  Map<String, dynamic> chartValue = {};
+  Future<void> fetchChartData() async {
+    try {
+      String? token = tkn;
+      final response = await chartData(token!);
 
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        List<dynamic> dayDataList = responseData['daydata'];
+        arr = dayDataList.map((dayData) => dayData['value']).toList();
+        setState(() {
+          chartValue = responseData; // Initialize the vendorDetails map with the parsed JSON data
+        });
+      } else {
+        print("Error fetching vendors. Status code: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error fetching vendors: $error");
+    }
+  }
+  void getChartValues(List<dynamic> arr) {
+    fetchChartData();
+    for (int i = 0; i < arr.length; i++) {
+      if(arr[i]!=0) {
+        arr[i] = (log(arr[i]) / log(10)).ceil();
+      }
+    }
+  }
   bool showAvg = false;
-
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchChartData();
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -875,6 +1014,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
           ],
         ),
         Container(
+          width: 327,
+          height: 365,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(
@@ -897,25 +1038,25 @@ class _LineChartSample2State extends State<LineChartSample2> {
     Widget text;
     switch (value.toInt()) {
       case 2:
-        text = const Text('S', style: style);
+        text = const Text('Sun', style: style);
         break;
       case 5:
-        text = const Text('M', style: style);
+        text = const Text('Mon', style: style);
         break;
       case 8:
-        text = const Text('T', style: style);
+        text = const Text('Tue', style: style);
         break;
       case 11:
-        text = const Text('W', style: style);
+        text = const Text('Wed', style: style);
         break;
       case 14:
-        text = const Text('T', style: style);
+        text = const Text('Thr', style: style);
         break;
       case 17:
-        text = const Text('F', style: style);
+        text = const Text('Fri', style: style);
         break;
       case 20:
-        text = const Text('S', style: style);
+        text = const Text('Sat', style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -939,13 +1080,14 @@ class _LineChartSample2State extends State<LineChartSample2> {
       5: "F",
       6: "S",
     };
-    List<int> xValues = indexToDayMap.keys.toList();
-    List<double> yValues = [0, 4, 6, 2, 4, 3, 5];
-    List<FlSpot> spots = xValues.map((index) {
-      double x = index.toDouble();
-      double y = yValues[index];
+    List<int> xValues = [2,5,8,11,14,17,20];
+    getChartValues(arr);
+    List<dynamic> yValues = arr;
+    List<FlSpot> spots = List<FlSpot>.generate(xValues.length, (index) {
+      double x = xValues[index].toDouble();
+      double y = yValues[index].toDouble();
       return FlSpot(x, y);
-    }).toList();
+    });
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -996,7 +1138,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       ),
       minX: -0.5,
       maxX: 22,
-      minY: 0,
+      minY: -1,
       maxY: 10,
       lineBarsData: [
         LineChartBarData(

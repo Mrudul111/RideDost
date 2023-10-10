@@ -20,36 +20,79 @@ class _CouponState extends State<Coupon> {
   bool is1Active = false;
   bool is2Active = false;
   String day = "Today";
+  List<dynamic> settle = [];
   int selectedContainer = 0;
-  Future<void> fetchCoupons() async {
+  int totalpages = 1;
+  int currentPage = 0;
+  int totalpage2 = 1;
+  int currentPage2 = 0;
+  Future<List<Map<String, dynamic>>> fetchCoupons(int page) async {
+    print("page in fetchCoupon $page");
     try {
-      String? token = await Login2(phno);
-      final response = await getAllCoupons(1,token!);
+
+      final response = await getAllCoupons(page, tkn);
+      print(tkn);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        print(responseData);
+
+        if (responseData['couponlist'] != null && responseData['couponlist'] is List) {
+          final List<Map<String, dynamic>> fetchedCoupons =
+          List.from(responseData['couponlist']);
+          totalpages = responseData['totalPages'];
+          return fetchedCoupons; // Return the fetched data
+        } else {
+          print("Error fetching coupons: Invalid data format");
+          // Return an empty list or handle the error case as needed
+          return [];
+        }
+      } else {
+        print("Error fetching coupons. Status code: ${response.statusCode}");
+        // Return an empty list or handle the error case as needed
+        return [];
+      }
+    } catch (error) {
+      print("Error fetching coupons: $error");
+      // Return an empty list or handle the error case as needed
+      return [];
+    }
+  }
+  Future<List<Map<String, dynamic>>> fetchPaymentSettlement(int currentPage) async {
+    try {
+      String? token = tkn;
+      final response = await paymentSettlement(currentPage, token!);
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
 
-        if (responseData['couponlist'] != null &&
-            responseData['couponlist'] is List) {
-          setState(() {
-            coupons = List.from(responseData['couponlist']);
-            print(coupons);
-          });
+        if (responseData['settlements'] != null &&
+            responseData['settlements'] is List) {
+          final List<Map<String, dynamic>> fetch =
+          List.from(responseData['settlements']);
+          totalpage2 = responseData['totalPages'];
+          print("total pages $totalpage2");
+          return fetch; // Return the fetched data
         } else {
-          print("Error fetching coupons: Invalid data format");
+          print("Error fetching requested data: Invalid data format");
         }
       } else {
-        print("Error fetching coupons. Status code: ${response.statusCode}");
+        print(
+            "Payment settlement ${response.statusCode}");
       }
     } catch (error) {
-      print("Error fetching coupons: $error");
+      print("Error fetching requested data: $error");
     }
+
+    // Return an empty list or handle the error case as needed
+    return [];
   }
+
 
   @override
   void initState() {
     // TODO: implement initState
-    fetchCoupons();
+    fetchCoupons(currentPage);
     super.initState();
   }
 
@@ -237,134 +280,462 @@ class _CouponState extends State<Coupon> {
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 100),
                         child: selectedContainer == 0
-                            ? Container(
-                                key: ValueKey<int>(selectedContainer),
-                                width: 325,
-                                height: 315,
-                                child: Center(
-                                  child: GridView.builder(
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount:
-                                          2, // Number of columns in the grid
-                                      mainAxisSpacing:
-                                          10.0, // Spacing between rows
-                                      crossAxisSpacing:
-                                          10.0, // Spacing between columns
-                                    ),
-                                    itemCount: coupons
-                                        .length, // Number of items in the grid
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      final coupon = coupons[index];
-                                      return GestureDetector(
-                                        onTap: () {
-                                          showModalBottomSheet(
-                                              context: context,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
+                            ? SizedBox(
+                            width: 351,
+                            height: 357.31  ,
+
+                            child: PageView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: totalpages, // Number of pages
+                              onPageChanged: (int page) {
+                                setState(() {
+                                  currentPage2 = page+1;
+                                });
+                                print("current page $page");
+                              },
+                              itemBuilder: (context, pageIndex) {
+                                return FutureBuilder<List<Map<String, dynamic>>?>(
+                                  future: fetchCoupons(currentPage2),
+                                  builder: (context, snapshot) {
+                                    print("Connection State: ${snapshot.connectionState}");
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      // While waiting for data, display a loading screen
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      // Handle error if necessary
+                                      return Center(
+                                        child: Text("Error fetching data"),
+                                      );
+                                    }
+                                    else if (snapshot.hasData) {
+                                      // Data has been loaded, display your content
+                                      coupons = snapshot.data ?? [];
+                                      return Container(
+                                        key: ValueKey<int>(selectedContainer),
+                                        width: 325,
+                                        height: 315,
+                                        child: Center(
+                                          child: GridView.builder(
+                                            gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount:
+                                              2, // Number of columns in the grid
+                                              mainAxisSpacing:
+                                              10.0, // Spacing between rows
+                                              crossAxisSpacing:
+                                              10.0, // Spacing between columns
+                                            ),
+                                            itemCount: coupons
+                                                .length, // Number of items in the grid
+                                            itemBuilder:
+                                                (BuildContext context, int index) {
+                                              final coupon = coupons[index];
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  showModalBottomSheet(
+                                                      context: context,
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                          BorderRadius.only(
+                                                              topLeft:
                                                               Radius.circular(
                                                                   34),
-                                                          topRight:
+                                                              topRight:
                                                               Radius.circular(
                                                                   34))),
-                                              builder: (context) {
-                                                return Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom:
-                                                          MediaQuery.of(context)
-                                                              .viewInsets
-                                                              .bottom),
-                                                  child: Container(
-                                                    width: double.infinity,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 20,
-                                                        horizontal: 30),
-                                                    height: 375,
-                                                    decoration: const BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                                topLeft: Radius
-                                                                    .circular(
+                                                      builder: (context) {
+                                                        return Padding(
+                                                          padding: EdgeInsets.only(
+                                                              bottom:
+                                                              MediaQuery.of(context)
+                                                                  .viewInsets
+                                                                  .bottom),
+                                                          child: Container(
+                                                            width: double.infinity,
+                                                            padding: const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 20,
+                                                                horizontal: 30),
+                                                            height: 375,
+                                                            decoration: const BoxDecoration(
+                                                                color: Colors.white,
+                                                                borderRadius:
+                                                                BorderRadius.only(
+                                                                    topLeft: Radius
+                                                                        .circular(
                                                                         34),
-                                                                topRight: Radius
-                                                                    .circular(
+                                                                    topRight: Radius
+                                                                        .circular(
                                                                         34))),
+                                                            child: Column(
+                                                              children: [
+                                                                SizedBox(
+                                                                  height: 20,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                                  children: [
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                      children: [
+                                                                        Text(
+                                                                          "Store Name",
+                                                                          style:
+                                                                          TextStyle(
+                                                                            fontSize:
+                                                                            25,
+                                                                            fontFamily:
+                                                                            "SF Pro Display",
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w700,
+                                                                            color: Color(
+                                                                                0xff150b3d),
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          coupon[
+                                                                          'couponCode'],
+                                                                          style:
+                                                                          TextStyle(
+                                                                            fontSize:
+                                                                            15,
+                                                                            fontFamily:
+                                                                            "SF Pro Display",
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w300,
+                                                                            color: Color(
+                                                                                0xff737784),
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                    Container(
+                                                                      width: 48,
+                                                                      height: 48,
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius:
+                                                                          BorderRadius
+                                                                              .circular(
+                                                                              6),
+                                                                          color: Color(
+                                                                              0xff3574f2)),
+                                                                      child: Center(
+                                                                        child: Text(
+                                                                          coupon['point'] +
+                                                                              "\nPTS",
+                                                                          style:
+                                                                          TextStyle(
+                                                                            fontFamily:
+                                                                            "SF Pro Display",
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w300,
+                                                                            fontSize:
+                                                                            11,
+                                                                            color: Color(
+                                                                                0xffffffff),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 50,
+                                                                ),
+                                                                DottedBorder(
+                                                                  color: Color(0xff737784),//color of dotted/dash line
+                                                                  strokeWidth: 3, //thickness of dash/dots
+                                                                  dashPattern: [10,6],
+                                                                  child: Container(
+                                                                    width: 297,
+                                                                    height: 50.13,
+                                                                    child: Center(
+                                                                      child: Text(
+                                                                        coupon[
+                                                                        'couponCode'],
+                                                                        style: TextStyle(
+                                                                          fontFamily:
+                                                                          "SF Pro Display",
+                                                                          color: Color(
+                                                                              0xff150b3d),
+                                                                          fontWeight:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                          fontSize: 22.7,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                                  children: [
+                                                                    Row(
+                                                                      children: [
+                                                                        Icon(
+                                                                          Icons
+                                                                              .access_time_outlined,
+                                                                          color: Color(
+                                                                              0xff737784),
+                                                                          size: 13.66,
+                                                                        ),
+                                                                        Text(
+                                                                          "20 days left",
+                                                                          style:
+                                                                          TextStyle(
+                                                                            color: Color(
+                                                                                0xff737784),
+                                                                            fontFamily:
+                                                                            "SF Pro Display",
+                                                                            fontSize:
+                                                                            13.66,
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w300,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(width: 10),
+                                                                    Row(
+                                                                      children: [
+                                                                        Icon(
+                                                                          Icons
+                                                                              .local_offer_outlined,
+                                                                          color: Color(
+                                                                              0xff737784),
+                                                                          size: 13.66,
+                                                                        ),
+                                                                        Text(
+                                                                          "No minimum purchase",
+                                                                          style:
+                                                                          TextStyle(
+                                                                            color: Color(
+                                                                                0xff737784),
+                                                                            fontFamily:
+                                                                            "SF Pro Display",
+                                                                            fontSize:
+                                                                            13.66,
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w300,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 40,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    showModalBottomSheet(
+                                                                        context:
+                                                                        context,
+                                                                        shape: RoundedRectangleBorder(
+                                                                            borderRadius: BorderRadius.only(
+                                                                                topLeft:
+                                                                                Radius.circular(
+                                                                                    34),
+                                                                                topRight:
+                                                                                Radius.circular(
+                                                                                    34))),
+                                                                        builder:
+                                                                            (context) {
+                                                                          return QR();
+                                                                        });
+                                                                  },
+                                                                  child: Container(
+                                                                    width: 327,
+                                                                    height: 56,
+                                                                    decoration:
+                                                                    BoxDecoration(
+                                                                      color: Color(
+                                                                          0xff3574f2),
+                                                                    ),
+                                                                    child: Center(
+                                                                      child: Text(
+                                                                        "Generate QR Code",
+                                                                        style:
+                                                                        TextStyle(
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontFamily:
+                                                                          "SF Pro Display",
+                                                                          fontSize: 16,
+                                                                          fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(height: 10),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      "Have any issue?",
+                                                                      style: TextStyle(
+                                                                        color: Color(
+                                                                            0xff737784),
+                                                                        fontFamily:
+                                                                        "SF Pro Display",
+                                                                        fontSize: 14,
+                                                                        fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      "Contact Us",
+                                                                      style: TextStyle(
+                                                                        color: Color(
+                                                                            0xff1d3a70),
+                                                                        fontFamily:
+                                                                        "SF Pro Display",
+                                                                        fontSize: 16.94,
+                                                                        fontWeight:
+                                                                        FontWeight
+                                                                            .w700,
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      });
+                                                },
+                                                child: Container(
+                                                    padding: EdgeInsets.all(8),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                      BorderRadius.circular(6),
+                                                      color: Colors.white,
+                                                    ),
                                                     child: Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                       children: [
+                                                        Text(
+                                                          "Apple Store",
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                            "SF Pro Display",
+                                                            fontWeight: FontWeight.w700,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          coupon['couponCode'] ??
+                                                              "No Coupon Code",
+                                                          style: TextStyle(
+                                                            fontFamily: "DM Sans",
+                                                            fontWeight: FontWeight.w400,
+                                                            fontSize: 8,
+                                                            color: Color(0xff737784),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        Container(
+                                                          width: 132.5,
+                                                          height: 1,
+                                                          color: Color(0xff737784),
+                                                        ),
                                                         SizedBox(
                                                           height: 20,
                                                         ),
+                                                        Text(
+                                                          "Flat Rs 300 OFF on All Orders",
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                            "SF Pro Display",
+                                                            fontWeight: FontWeight.w300,
+                                                            fontSize: 11,
+                                                            color: Color(0xff150b3d),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 15,
+                                                        ),
                                                         Row(
                                                           mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
                                                           children: [
                                                             Column(
                                                               crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                               children: [
                                                                 Text(
-                                                                  "Store Name",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        25,
+                                                                  "Generated",
+                                                                  style: TextStyle(
                                                                     fontFamily:
-                                                                        "SF Pro Display",
+                                                                    "SF Pro Display",
                                                                     fontWeight:
-                                                                        FontWeight
-                                                                            .w700,
+                                                                    FontWeight.w300,
+                                                                    fontSize: 8,
                                                                     color: Color(
                                                                         0xff150b3d),
                                                                   ),
                                                                 ),
                                                                 Text(
                                                                   coupon[
-                                                                      'couponCode'],
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        15,
+                                                                  'expirationDate'],
+                                                                  style: TextStyle(
                                                                     fontFamily:
-                                                                        "SF Pro Display",
+                                                                    "SF Pro Display",
                                                                     fontWeight:
-                                                                        FontWeight
-                                                                            .w300,
+                                                                    FontWeight.w700,
+                                                                    fontSize: 10,
                                                                     color: Color(
-                                                                        0xff737784),
+                                                                        0xff3574F2),
                                                                   ),
-                                                                )
+                                                                ),
                                                               ],
                                                             ),
                                                             Container(
-                                                              width: 48,
-                                                              height: 48,
+                                                              width: 30,
+                                                              height: 30,
                                                               decoration: BoxDecoration(
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              6),
+                                                                  BorderRadius
+                                                                      .circular(6),
                                                                   color: Color(
                                                                       0xff3574f2)),
                                                               child: Center(
                                                                 child: Text(
-                                                                  coupon['point'] +
-                                                                      "\nPTS",
-                                                                  style:
-                                                                      TextStyle(
+                                                                  coupon['point'] ??
+                                                                      "0",
+                                                                  style: TextStyle(
                                                                     fontFamily:
-                                                                        "SF Pro Display",
+                                                                    "SF Pro Display",
                                                                     fontWeight:
-                                                                        FontWeight
-                                                                            .w300,
-                                                                    fontSize:
-                                                                        11,
+                                                                    FontWeight.w300,
+                                                                    fontSize: 11,
                                                                     color: Color(
                                                                         0xffffffff),
                                                                   ),
@@ -373,433 +744,184 @@ class _CouponState extends State<Coupon> {
                                                             )
                                                           ],
                                                         ),
-                                                        SizedBox(
-                                                          height: 50,
-                                                        ),
-                                                        DottedBorder(
-                                                          color: Color(0xff737784),//color of dotted/dash line
-                                                          strokeWidth: 3, //thickness of dash/dots
-                                                          dashPattern: [10,6],
-                                                          child: Container(
-                                                            width: 297,
-                                                            height: 50.13,
-                                                            child: Center(
-                                                              child: Text(
-                                                                coupon[
-                                                                    'couponCode'],
-                                                                style: TextStyle(
-                                                                  fontFamily:
-                                                                      "SF Pro Display",
-                                                                  color: Color(
-                                                                      0xff150b3d),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  fontSize: 22.7,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .access_time_outlined,
-                                                                  color: Color(
-                                                                      0xff737784),
-                                                                  size: 13.66,
-                                                                ),
-                                                                Text(
-                                                                  "20 days left",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Color(
-                                                                        0xff737784),
-                                                                    fontFamily:
-                                                                        "SF Pro Display",
-                                                                    fontSize:
-                                                                        13.66,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w300,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(width: 10),
-                                                            Row(
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .local_offer_outlined,
-                                                                  color: Color(
-                                                                      0xff737784),
-                                                                  size: 13.66,
-                                                                ),
-                                                                Text(
-                                                                  "No minimum purchase",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Color(
-                                                                        0xff737784),
-                                                                    fontFamily:
-                                                                        "SF Pro Display",
-                                                                    fontSize:
-                                                                        13.66,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w300,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: 40,
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            showModalBottomSheet(
-                                                                context:
-                                                                    context,
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius: BorderRadius.only(
-                                                                        topLeft:
-                                                                            Radius.circular(
-                                                                                34),
-                                                                        topRight:
-                                                                            Radius.circular(
-                                                                                34))),
-                                                                builder:
-                                                                    (context) {
-                                                                  return QR();
-                                                                });
-                                                          },
-                                                          child: Container(
-                                                            width: 327,
-                                                            height: 56,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Color(
-                                                                  0xff3574f2),
-                                                            ),
-                                                            child: Center(
-                                                              child: Text(
-                                                                "Generate QR Code",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontFamily:
-                                                                      "SF Pro Display",
-                                                                  fontSize: 16,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Text(
-                                                              "Have any issue?",
-                                                              style: TextStyle(
-                                                                color: Color(
-                                                                    0xff737784),
-                                                                fontFamily:
-                                                                    "SF Pro Display",
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              "Contact Us",
-                                                              style: TextStyle(
-                                                                color: Color(
-                                                                    0xff1d3a70),
-                                                                fontFamily:
-                                                                    "SF Pro Display",
-                                                                fontSize: 16.94,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        )
                                                       ],
-                                                    ),
-                                                  ),
-                                                );
-                                              });
-                                        },
-                                        child: Container(
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                              color: Colors.white,
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Apple Store",
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        "SF Pro Display",
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  coupon['couponCode'] ??
-                                                      "No Coupon Code",
-                                                  style: TextStyle(
-                                                    fontFamily: "DM Sans",
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 8,
-                                                    color: Color(0xff737784),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                Container(
-                                                  width: 132.5,
-                                                  height: 1,
-                                                  color: Color(0xff737784),
-                                                ),
-                                                SizedBox(
-                                                  height: 20,
-                                                ),
-                                                Text(
-                                                  "Flat Rs 300 OFF on All Orders",
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        "SF Pro Display",
-                                                    fontWeight: FontWeight.w300,
-                                                    fontSize: 11,
-                                                    color: Color(0xff150b3d),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "Generated",
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                "SF Pro Display",
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                            fontSize: 8,
-                                                            color: Color(
-                                                                0xff150b3d),
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          coupon[
-                                                              'expirationDate'],
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                "SF Pro Display",
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            fontSize: 10,
-                                                            color: Color(
-                                                                0xff3574F2),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Container(
-                                                      width: 30,
-                                                      height: 30,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(6),
-                                                          color: Color(
-                                                              0xff3574f2)),
-                                                      child: Center(
-                                                        child: Text(
-                                                          coupon['point'] ??
-                                                              "0",
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                "SF Pro Display",
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                            fontSize: 11,
-                                                            color: Color(
-                                                                0xffffffff),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ],
-                                            )),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              )
-                            : Container(
-                                padding: EdgeInsets.all(8),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "Transactions History",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 20,
-                                            color: Colors.black,
+                                                    )),
+                                              );
+                                            },
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              '$day',
-                                              style: TextStyle(
-                                                color: Color(0xff969696),
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                return showPopupMenu(context);
-                                              },
-                                              child: Container(
-                                                width: 14.09,
-                                                height: 14.09,
-                                                child: Image.asset(
-                                                  'assets/images/dropdown.png',
-                                                  fit: BoxFit.fitHeight,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    ListView.separated(
-                                      key: ValueKey<int>(selectedContainer),
-                                      scrollDirection: Axis.vertical,
-                                      separatorBuilder: (context, index) =>
-                                          SizedBox(height: 16.0),
-                                      shrinkWrap: true,
-                                      itemCount: 4,
-                                      physics: AlwaysScrollableScrollPhysics(),
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Container(
-                                          width: 321.34,
-                                          height: 56.96,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
+                                      );
+                                    } else {
+                                      // Handle no data case
+                                      return Center(
+                                        child: Text("No data available"),
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            )
+
+                        )
+                            : Container(
+                          child: Container(
+                            width: 335,
+                            height: 449,
+                            child: PageView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: totalpage2, // Number of pages
+                              onPageChanged: (int page) {
+                                setState(() {
+                                  currentPage2 = page+1;
+                                });
+                                print("current page $page");
+                              },
+                              itemBuilder: (context, pageIndex) {
+                                return FutureBuilder<
+                                    List<Map<String, dynamic>>?>(
+                                    future: fetchPaymentSettlement(currentPage2),
+                                    builder: (context, snapshot) {
+                                      print(
+                                          "Connection State: ${snapshot.connectionState}");
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        // While waiting for data, display a loading screen
+                                        return Center(
+                                          child:
+                                          CircularProgressIndicator(),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        // Handle error if necessary
+                                        return Center(
+                                          child:
+                                          Text("Error fetching data"),
+                                        );
+                                      } else {
+                                        settle = snapshot.data ?? [];
+                                        return ListView.separated(
+                                          separatorBuilder:
+                                              (context, index) =>
+                                              SizedBox(height: 16.0),
+                                          shrinkWrap: true,
+                                          itemCount: settle.length,
+                                          physics:
+                                          AlwaysScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            final set = settle[index];
+                                            return Container(
+                                              padding: EdgeInsets.all(8),
+                                              child: Column(
                                                 children: [
-                                                  Container(
-                                                    width: 56.17,
-                                                    height: 56.17,
-                                                    decoration: BoxDecoration(
-                                                      color: Color(0xfff3ebd9),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              14),
-                                                    ),
-                                                    child: Center(
-                                                      child: Image.asset(
-                                                          'assets/images/icon.png'),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  Column(
+                                                  Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
+                                                    MainAxisAlignment.spaceBetween,
                                                     children: [
                                                       Text(
-                                                        "Gym",
+                                                        "Transactions History",
                                                         style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 16.85,
-                                                          fontFamily: "DM Sans",
+                                                          fontWeight: FontWeight.w600,
+                                                          fontSize: 20,
+                                                          color: Colors.black,
                                                         ),
                                                       ),
-                                                      Text(
-                                                        "Payment",
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                "DM Sans",
-                                                            fontSize: 10.3,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: Color(
-                                                                0xff5a5b78)),
-                                                      )
                                                     ],
+                                                  ),
+                                                  SizedBox(
+                                                      width: 335,
+                                                      height: 449,
+                                                      child: ListView.separated(
+                                                        separatorBuilder:
+                                                            (context, index) =>
+                                                            SizedBox(height: 16.0),
+                                                        shrinkWrap: true,
+                                                        itemCount: 4,
+                                                        physics:
+                                                        AlwaysScrollableScrollPhysics(),
+                                                        itemBuilder: (context, index) {
+                                                          print('bruh');
+                                                          return Container(
+                                                            width: 321.34,
+                                                            height: 56.96,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                              MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      width: 56.17,
+                                                                      height: 56.17,
+                                                                      decoration: BoxDecoration(
+                                                                        color: Color(0xfff3ebd9),
+                                                                        borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            14),
+                                                                      ),
+                                                                      child: Center(
+                                                                        child: Image.asset(
+                                                                            'assets/images/icon.png'),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 5,
+                                                                    ),
+                                                                    Column(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Text(
+                                                                          set['coupon']['couponCode'],
+                                                                          style: TextStyle(
+                                                                            fontWeight:
+                                                                            FontWeight.w500,
+                                                                            fontSize: 16.85,
+                                                                            fontFamily: "DM Sans",
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          'Payment',
+                                                                          style: TextStyle(
+                                                                              fontFamily:
+                                                                              "DM Sans",
+                                                                              fontSize: 10.3,
+                                                                              fontWeight:
+                                                                              FontWeight.w500,
+                                                                              color: Color(
+                                                                                  0xff5a5b78)),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Text(
+                                                                  '${set['amount']}',
+                                                                  style: TextStyle(
+                                                                    fontFamily: "DM Sans",
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: 16.85,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          );
+                                                        },
+                                                      )
+
                                                   ),
                                                 ],
                                               ),
-                                              Text(
-                                                "-40.99",
-                                                style: TextStyle(
-                                                  fontFamily: "DM Sans",
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 16.85,
-                                                ),
-                                              )
-                                            ],
-                                          ),
+                                            );
+                                          },
                                         );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                      }
+                                    });
+                              },
+                            ),
+                          ),
+                        )
+                        ,
                       ),
                     ),
                   ],
@@ -1047,7 +1169,7 @@ class _QRState extends State<QR> {
           children: [
             Container(
               child: QrImageView(
-                data: 'https://www.youtube.com/watch?v=yEcZSUJqgNg',
+                data: 'AWKS-KVFR',
                 size: 200,
               ),
             ),
@@ -1108,3 +1230,4 @@ class _QRState extends State<QR> {
     );
   }
 }
+

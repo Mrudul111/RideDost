@@ -1,12 +1,19 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:token/addvendor.dart';
+import 'package:token/checkout.dart';
 import 'package:token/createAccount.dart';
 import 'package:token/dailyReport.dart';
+import 'package:token/listing.dart';
+import 'package:token/manageVendor.dart';
+import 'package:token/profilePage.dart';
 import 'package:token/request.dart';
 import 'package:token/vendor.dart';
+import 'package:token/vendorlist.dart';
 
 import 'coupon.dart';
 import 'dashboard.dart';
@@ -39,10 +46,15 @@ void main() async{
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({Key? key}) : super(key: key);
 
+  const MainApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<String> activeFilter = ValueNotifier<String>('New Vendor');
+     FlutterDownloader.initialize(
+        debug: true // optional: set false to disable printing logs to console
+    );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: FirebaseAuth.instance.currentUser != null ? DashboardScreen() : homePage(),
@@ -50,13 +62,16 @@ class MainApp extends StatelessWidget {
         '/home': (context) => homePage(),
         '/dashboard': (context) => DashboardScreen(),
         '/login':(context) => loginPage(),
-        '/vendor':(context) => VendorList(),
+        '/vendor':(context) => VendorList(activeFilter: activeFilter,),
         '/addvendor':(context)=>AddVendor(),
         '/coupon':(context)=>Coupon(),
         '/request':(context)=> RequestPage(),
         '/dailyreport':(context)=> dailyReport(),
-        '/newaccount':(context)=>createAccount(),
         '/createaccount':(context)=>newAccount(),
+        '/profile':(context)=>profilePage(),
+        '/listing':(context)=>listingPage(),
+        '/checkout':(context)=>checkoutPage(),
+        '/manageteam':(context)=>manageVendor()
       },
     );
   }

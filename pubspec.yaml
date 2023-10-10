@@ -44,6 +44,12 @@ dependencies:
   dotted_border: ^2.0.0+3
   fl_chart: ^0.63.0
   jwt_decoder: ^2.0.1
+  camera: ^0.10.5+4
+  qr_code_scanner: ^1.0.1
+  barcode_scanner: ^3.6.1
+  simple_barcode_scanner: ^0.0.8
+  flutter_downloader: ^1.11.2
+  flowder: ^0.2.0
 
 dev_dependencies:
   flutter_test:

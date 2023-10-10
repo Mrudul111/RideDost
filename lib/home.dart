@@ -89,6 +89,35 @@ class _homePageState extends State<homePage> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 10,),
+                  SizedBox(
+                    width: 353,
+                    height: 56.0,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+
+                        ),
+                        side: BorderSide(
+                          color: Color(0xFF3574F2),
+                        )
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/createaccount');
+                      },
+                      child:  Text(
+                        "Create Account",
+                        style: TextStyle(
+                          fontFamily: "Mazzart",
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF3574F2),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               )
             ],

@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'api/jsonAPI.dart';
 
 class dailyReport extends StatefulWidget {
   const dailyReport({super.key});
@@ -8,6 +11,70 @@ class dailyReport extends StatefulWidget {
 }
 
 class _dailyReportState extends State<dailyReport> {
+  int currentPage = 1; // Start from page 1
+  int totalPages = 1; // Start with 1 page initially
+  List<Map<String, dynamic>> reports = [];
+  bool isLoading = false;
+  bool isError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadReports();
+  }
+
+  void loadReports() async {
+    if (isLoading) {
+      // Avoid making multiple requests simultaneously
+      return;
+    }
+
+    try {
+      setState(() {
+        isLoading = true;
+        isError = false;
+      });
+
+      final newReports = await fetchReports(currentPage);
+      setState(() {
+        reports.addAll(newReports);
+        isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+        isError = true;
+      });
+
+      // Handle error as needed, e.g., display an error message
+      print("Error loading reports: $error");
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchReports(int page) async {
+    try {
+      String? token = tkn;
+      final response = await getReports(page, token!);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        if (responseData['csv'] != null && responseData['csv'] is List) {
+          final List<Map<String, dynamic>> fetchedReports =
+              List.from(responseData['csv']);
+          totalPages = responseData['totalPages'];
+          print(responseData);
+          return fetchedReports;
+        }
+      }
+
+      throw Exception('Error fetching reports');
+    } catch (error) {
+      print("Error fetching reports: $error");
+      throw error;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,10 +83,11 @@ class _dailyReportState extends State<dailyReport> {
         title: Text(
           "Daily Status",
           style: TextStyle(
-              fontFamily: "SF Pro Display",
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
-              color: Color(0xff1d3a70)),
+            fontFamily: "SF Pro Display",
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: Color(0xff1d3a70),
+          ),
         ),
         backgroundColor: Color(0xfff2f2f2),
         iconTheme: IconThemeData(color: Color(0xff1d3a70)),
@@ -73,164 +141,245 @@ class _dailyReportState extends State<dailyReport> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.all(8),
+          physics: NeverScrollableScrollPhysics(),
           child: Container(
             child: Column(
               children: [
                 SizedBox(
-                  height: 50,
+                  height: 30,
                 ),
-                ListView.separated(
-                  scrollDirection: Axis.vertical,
-                  separatorBuilder: (context, index) => SizedBox(height: 16.0),
-                  shrinkWrap: true,
-                  itemCount: 4,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: 300,
-                      height: 93,
-                      decoration: BoxDecoration(
-                          color: Color(0XFFFFFFFF),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  'Data Title',
-                                  style: TextStyle(
-                                    color: Color(0xff1b2559),
-                                    fontFamily: 'DM Sans',
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Text(
-                                  '21st JUL 2023',
-                                  style: TextStyle(
-                                    fontFamily: 'DM Sans',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xffa3aed0),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 100,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: SizedBox(
+                    width: 351,
+                    height: 357.31,
+                    child: PageView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: totalPages,
+                      onPageChanged: (int page) {
+                        if (page + 1 == totalPages && !isLoading) {
+                          // Load more data when reaching the last page
+                          currentPage++;
+                          loadReports();
+                        }
+                        print("current page $page");
+                      },
+                      itemBuilder: (context, pageIndex) {
+                        return isLoading
+                            ? Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : isError
+                                ? Center(
+                                    child: Text("Error fetching data"),
+                                  )
+                                : ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemCount: reports.length,
+                                    physics: AlwaysScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      final report = reports[index];
                                       return Container(
-                                        width: 375,
-                                        height: 547,
-                                        padding: EdgeInsets.all(8),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 60,
-                                              height: 6,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xffdfe2eb),
-                                                borderRadius: BorderRadius.circular(10)
-                                              ),
-                                            ),
-                                            SizedBox(height: 10,),
-                                            Container(
-                                              width: 235,
-                                              height: 200,
-                                              child: Image.asset('assets/images/Frame 162397.png',fit: BoxFit.fitWidth,),
-                                            ),
-                                            SizedBox(height: 20,),
-                                            Text(
-                                              "Downloaded",
-                                              style: TextStyle(
-                                                fontFamily: "DM Sans",
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 22,
-                                                color: Color(0xff191d31)
-                                              ),
-                                            ),
-                                            Text(
-                                              'Congratulation! your package will be picked up by the \ncourier, please wait a moment.',
-                                              style: TextStyle(
-                                                fontFamily: "DM Sans",
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 14,
-                                                color: Color(0xffa7a9b7)
-                                              ),
-                                            ),
-                                            SizedBox(height: 20,),
-                                            GestureDetector(
-                                              onTap: (){
-                                                Navigator.pop(context);
-                                              },
-                                              child: Container(
-                                                width: 327,
-                                                height: 56,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(30),
-                                                  border:Border.all(
-                                                    color: Color(0xff3574f2),
-                                                  )
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    "Go Back",
+                                        width: 300,
+                                        height: 93,
+                                        decoration: BoxDecoration(
+                                          color: Color(0XFFFFFFFF),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Text(
+                                                    'csv',
                                                     style: TextStyle(
-                                                        fontFamily: "DM Sans",
-                                                        fontWeight: FontWeight.w500,
-                                                        fontSize: 16,
-                                                        color: Color(0xff3574f2)
+                                                      color: Color(0xff1b2559),
+                                                      fontFamily: 'DM Sans',
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      fontSize: 18,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    report['createdAt'],
+                                                    style: TextStyle(
+                                                      fontFamily: 'DM Sans',
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Color(0xffa3aed0),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                width: 100,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  await FlutterDownloader.enqueue(
+                                                      url: report['csvfileurl'],
+                                                      savedDir:
+                                                          '/storage/emulated/0/Download',
+                                                      showNotification: true,
+                                                      openFileFromNotification:
+                                                          true,
+                                                    saveInPublicStorage: true,
+                                                  );
+                                                  showModalBottomSheet(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return Container(
+                                                          width: 375,
+                                                          height: 547,
+                                                          padding:
+                                                              EdgeInsets.all(8),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Container(
+                                                                width: 60,
+                                                                height: 6,
+                                                                decoration: BoxDecoration(
+                                                                    color: Color(
+                                                                        0xffdfe2eb),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              Container(
+                                                                width: 235,
+                                                                height: 200,
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/images/Frame 162397.png',
+                                                                  fit: BoxFit
+                                                                      .fitWidth,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              Text(
+                                                                "Downloaded",
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        "DM Sans",
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700,
+                                                                    fontSize:
+                                                                        22,
+                                                                    color: Color(
+                                                                        0xff191d31)),
+                                                              ),
+                                                              Text(
+                                                                'Congratulation! your package will be picked up by the \ncourier, please wait a moment.',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        "DM Sans",
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: Color(
+                                                                        0xffa7a9b7)),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  width: 327,
+                                                                  height: 56,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                              30),
+                                                                          border:
+                                                                              Border.all(
+                                                                            color:
+                                                                                Color(0xff3574f2),
+                                                                          )),
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      "Go Back",
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              "DM Sans",
+                                                                          fontWeight: FontWeight
+                                                                              .w500,
+                                                                          fontSize:
+                                                                              16,
+                                                                          color:
+                                                                              Color(0xff3574f2)),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        );
+                                                      });
+                                                },
+                                                child: Container(
+                                                  width: 66,
+                                                  height: 24,
+                                                  decoration: BoxDecoration(
+                                                    color: Color(0xff3574f2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Download",
+                                                      style: TextStyle(
+                                                        fontSize: 8,
+                                                        fontFamily:
+                                                            'SF Pro Display',
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        color: Colors.white,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            )
-                                          ],
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       );
-                                    });
-                              },
-                              child: Container(
-                                width: 66,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                  color: Color(0xff3574f2),
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "Download",
-                                    style: TextStyle(
-                                      fontSize: 8,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                                    },
+                                  );
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),

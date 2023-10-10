@@ -1,24 +1,30 @@
 import 'dart:convert';
-
-import 'package:barcode_scanner/classical_components/barcode_camera.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'api/jsonAPI.dart';
 import 'dashboard.dart';
 
 
-class productListing extends StatefulWidget {
-  const productListing({super.key});
+class editProductListing extends StatefulWidget {
+  final String id;
+  final String name;
+  final String price;
+  final String description;
+  final String rating;
+  final String url;
+  const editProductListing({super.key,required this.id,required this.name,required this.price,required this.description,required this.rating,required this.url});
 
   @override
-  State<productListing> createState() => _productListingState();
+  State<editProductListing> createState() => _editProductListingState();
 }
 
-class _productListingState extends State<productListing> {
+class _editProductListingState extends State<editProductListing> {
   final _key = GlobalKey<FormState>();
+
+
+
   Map<String, dynamic> userData = {
     'name': '',
     'productimage': '',
@@ -26,49 +32,20 @@ class _productListingState extends State<productListing> {
     'rating': '',
     'description': '',
   };
-  Future<http.Response> addProduct(Map<String, dynamic> userData, String token) async {
-    final String baseUrl = 'https://token-web-backend.el.r.appspot.com/admin/product';
-    final Uri uri = Uri.parse(baseUrl);
-    print(userData);
-    try {
-      final http.Response response = await http.post(
-        uri,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: json.encode(userData), // Use the userData directly as the body
-      );
-      print(response.body);
-      if(response.statusCode!=201){
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Product add Unsuccessfully',style: TextStyle(color: Colors.white),),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-      else{
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Added Product Successfully',style: TextStyle(color: Colors.white)),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
-        });
-      }
-      print(response.statusCode);
-      return response;
-
-    } catch (error) {
-      throw error;
-    }
+  @override
+  void initState() {
+    // TODO: implement initState
+    userData['name'] = widget.name;
+    userData['price'] = widget.price;
+    userData['description'] = widget.description;
+    userData['rating'] = widget.rating;
+    userData['productimage'] = widget.url;
+    super.initState();
   }
+  String URL = '';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       backgroundColor: Color(0xFFF2F2F2),
       appBar: AppBar(
         elevation: 0,
@@ -86,7 +63,7 @@ class _productListingState extends State<productListing> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Add Listing",
+                  "Edit Listing",
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 24,
@@ -143,6 +120,10 @@ class _productListingState extends State<productListing> {
                                       print('Image uploaded successfully: $responseBody');
                                       Map<String, dynamic> parsedResponse = json.decode(responseBody);
                                       userData['productimage'] = parsedResponse['secure_url'];
+                                      URL = parsedResponse['secure_url'];
+                                      setState(() {
+
+                                      });
                                     } else {
                                       print('Image upload failed. Status code: ${response.statusCode}, Response: $responseBody');
                                     }
@@ -161,14 +142,10 @@ class _productListingState extends State<productListing> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: Text(
-                                        "choose file",
-                                        style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 15,
-                                          color: Color(0xff64748b),
-                                        ),
+                                      child: Container(
+                                          width: 39,
+                                          height: 39,
+                                          child: URL!=''? Image.network(URL):Image.network(widget.url)
                                       ),
                                     ),
                                     Padding(
@@ -214,7 +191,7 @@ class _productListingState extends State<productListing> {
                               }
                               return null;
                             },
-                            onSaved: (newValue) {
+                            onChanged: (newValue) {
                               userData['name'] = newValue;
                             },
                             style: const TextStyle(
@@ -283,7 +260,7 @@ class _productListingState extends State<productListing> {
                               }
                               return null;
                             },
-                            onSaved: (newValue) {
+                            onChanged: (newValue) {
                               userData['price'] = newValue;
                             },
                             style: const TextStyle(
@@ -352,7 +329,7 @@ class _productListingState extends State<productListing> {
                               }
                               return null;
                             },
-                            onSaved: (newValue) {
+                            onChanged: (newValue) {
                               userData['description'] = newValue;
                             },
                             style: const TextStyle(
@@ -421,7 +398,7 @@ class _productListingState extends State<productListing> {
                               }
                               return null;
                             },
-                            onSaved: (newValue) {
+                            onChanged: (newValue) {
                               userData['rating'] = newValue;
                             },
                             style: const TextStyle(
@@ -480,9 +457,9 @@ class _productListingState extends State<productListing> {
                                 borderRadius: BorderRadius.circular(10)),
                             child: Center(
                                 child: Icon(
-                              Icons.arrow_back,
-                              color: Colors.black,
-                            )),
+                                  Icons.arrow_back,
+                                  color: Colors.black,
+                                )),
                           ),
                         ),
                         SizedBox(
@@ -492,8 +469,14 @@ class _productListingState extends State<productListing> {
                           onTap: () {
                             if (_key.currentState!.validate()) {
                               _key.currentState?.save();
-                              addProduct(userData, tkn!);
+                              print(id);
+                              print(userData);
+                              editProduct(userData, tkn!,widget.id);
                             }
+                            Navigator.pop(context);
+                            setState(() {
+
+                            });
                           },
                           child: Container(
                             height: 58,

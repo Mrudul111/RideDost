@@ -27,7 +27,7 @@ class _listState extends State<list> {
   }
 
   Color dynamicFontColor(String status) {
-    if (status == "STATUS") {
+    if (status == "reject" || status=='STATUS' || status=='rejected') {
       return FCColors.brightRed;
     } else if (status == "pending") {
       return Color(0xfff2a715);
@@ -35,6 +35,17 @@ class _listState extends State<list> {
       return Color(0xff157bf2);
     } else {
       return Color(0xff07c53c);
+    }
+  }
+  Color dynamicBGColor(String status) {
+    if (status == "reject"|| status=='STATUS' || status=='rejected') {
+      return Color.fromRGBO(255, 87, 87, 0.1);
+    } else if (status == "pending") {
+      return Color(0xfffa857);
+    } else if (status == "requested") {
+      return Colors.lightBlueAccent;
+    } else {
+      return Color.fromRGBO(87, 255, 134, 0.1);
     }
   }
   Widget buildRequestItem(
@@ -88,9 +99,7 @@ class _listState extends State<list> {
                   padding:
                   const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   decoration: BoxDecoration(
-                    color: status == "pending"
-                        ? Color(0xfffa857)
-                        : Colors.lightBlueAccent.shade100,
+                    color: dynamicBGColor(status),
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Text(
